@@ -1,9 +1,7 @@
-<%@ page contentType="text/html;charset=UTF-8"%>
-<html>
-<head>
-    <title>Title</title>
-</head>
-<body>
-<h1>welcome</h1>
-</body>
-</html>
+<%@include file="templates/start.jspf" %>
+<%@include file="templates/header.jspf"%>
+
+
+
+<%@include file="templates/footer.jspf"%>
+<%@include file="templates/end.jspf" %>
