@@ -27,10 +27,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String userMail) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(userMail);
 
-        if (!user.isEnabled()) return null;
+        if (!user.isEnabled()) throw new UsernameNotFoundException("User not activated.");
 
         //получаем все роли пользователя из дб и отмечаем их у него
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
