@@ -4,21 +4,23 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
 <header>
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a class="navbar-brand" href="#">Твиттер</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item"> <%--todo class=active - for current link--%>
-                    <a class="nav-link" href="${contextPath}/">Главная</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="${contextPath}/login">Войти</a>
-                </li>
-            </ul>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Твиттер</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"> <%--todo class=active - for current link--%>
+                        <a class="nav-link" href="${contextPath}/">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="${contextPath}/login">Войти</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 </header>
