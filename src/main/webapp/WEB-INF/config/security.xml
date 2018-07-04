@@ -8,8 +8,12 @@
     <!--security pages-->
     <sec:http auto-config="true">
         <!--доступ без ролей, пока не используем их-->
-        <sec:intercept-url pattern="/" access="permitAll()"/>
-        <sec:form-login login-page="/login" default-target-url="/welcome" authentication-failure-url="/login?error" username-parameter="username" password-parameter="password"/>
+        <sec:intercept-url pattern="/**" access="hasAnyRole('ROLE_USER')"/>
+        <sec:intercept-url pattern="/**" access="permitAll()"/>
+        <sec:form-login login-page="/login"
+                        default-target-url="/"
+                        always-use-default-target="true"
+                        authentication-failure-url="/login?error"/>
         <sec:logout logout-success-url="/login?logout" />
     </sec:http>
 

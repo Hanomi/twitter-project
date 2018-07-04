@@ -1,8 +1,6 @@
 <%@include file="templates/start.jspf" %>
 <%@include file="templates/header.jspf"%>
 
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-
 <main role="main" class="container">
     <div class="row justify-content-md-center">
         <div class="col col-sm-5">
@@ -21,10 +19,7 @@
                         <button class="btn btn-sm btn-primary btn-block" type="submit">Log In</button>
                     </div>
                     <div class="col-sm">
-                        <a href="${contextPath}/#" role="button" class="btn btn-sm btn-primary btn-block">Registration</a>
-                    </div>
-                    <div class="col-sm-2">
-                        <a href="${contextPath}/#" role="button" class="btn btn-sm btn-primary btn-block">VK</a>
+                        <a href="${contextPath}/registration" role="button" class="btn btn-sm btn-primary btn-block">Registration</a>
                     </div>
                 </div>
                 <div class="form-group">

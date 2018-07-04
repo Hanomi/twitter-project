@@ -6,7 +6,7 @@
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!--component scan-->
-    <context:component-scan base-package="io.shifu.twitterproject.controller"/>
+    <context:component-scan base-package="io.shifu.twitterproject.*"/>
 
     <!--db property for xml setup-->
     <context:property-placeholder location="classpath:database.properties"/>

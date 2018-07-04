@@ -14,9 +14,13 @@
 
     <!--locales source-->
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basenames" value="classpath:/locales"/>
+        <property name="basenames" value="/WEB-INF/locales/lang"/>
         <property name="cacheSeconds" value="1"/>
         <property name="defaultEncoding" value="UTF-8" />
+    </bean>
+
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="validationMessageSource" ref="messageSource" />
     </bean>
 
     <!--mapping strings to jsp views-->
