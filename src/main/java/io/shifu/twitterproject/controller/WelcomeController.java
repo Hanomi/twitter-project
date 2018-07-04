@@ -1,5 +1,6 @@
 package io.shifu.twitterproject.controller;
 
+import io.shifu.twitterproject.model.Message;
 import io.shifu.twitterproject.services.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,9 @@ public class WelcomeController {
 
         // все сообщения на главной
         model.addAttribute("messagesList", messageService.findAll());
+
+        // форма добавления
+        model.addAttribute("messageForm", new Message());
 
         // заголовок
         model.addAttribute("title", "Твиттер");

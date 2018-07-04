@@ -1,4 +1,4 @@
-<%@ page pageEncoding="UTF-8" %>
+<%@page pageEncoding="UTF-8" %>
 
 <%@include file="templates/start.jspf" %>
 <%@include file="templates/header.jspf" %>
