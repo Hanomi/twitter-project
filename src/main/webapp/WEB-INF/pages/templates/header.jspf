@@ -16,7 +16,7 @@
                     <a class="nav-link" href="${contextPath}/">Главная</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Войти</a>
+                    <a class="nav-link" href="${contextPath}/login">Войти</a>
                 </li>
             </ul>
         </div>

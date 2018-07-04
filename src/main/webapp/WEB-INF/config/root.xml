@@ -8,8 +8,12 @@
     <!--component scan-->
     <context:component-scan base-package="io.shifu.twitterproject.controller"/>
 
+    <!--db property for xml setup-->
+    <context:property-placeholder location="classpath:database.properties"/>
+
     <!--import other xml-->
     <import resource="mvc.xml"/>
-
+    <import resource="security.xml"/>
+    <import resource="data.xml"/>
 
 </beans>

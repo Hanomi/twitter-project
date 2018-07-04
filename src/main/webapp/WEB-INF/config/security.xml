@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		                   http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!--security pages-->
+    <sec:http auto-config="true">
+        <!--доступ без ролей, пока не используем их-->
+        <sec:intercept-url pattern="/" access="permitAll()"/>
+        <sec:form-login login-page="/login" default-target-url="/welcome" authentication-failure-url="/login?error" username-parameter="username" password-parameter="password"/>
+        <sec:logout logout-success-url="/login?logout" />
+    </sec:http>
+
+    <!--authentication bean setup-->
+    <bean id="userDetailsServiceImpl" class="io.shifu.twitterproject.services.UserDetailsServiceImpl"/>
+
+    <sec:authentication-manager alias="authenticationManager">
+        <sec:authentication-provider user-service-ref="userDetailsServiceImpl">
+            <sec:password-encoder ref="encoder"/>
+        </sec:authentication-provider>
+    </sec:authentication-manager>
+
+    <!--password encoder-->
+    <bean id="encoder"
+          class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+        <constructor-arg name="strength" value="11"/>
+    </bean>
+</beans>
