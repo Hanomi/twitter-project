@@ -32,12 +32,12 @@
         <div class="row">
             <div class="col">
                 <h4>Что у вас нового?</h4>
-                <form:form method="POST" modelAttribute="messageForm" action="${contextPath}/message/add">
+                <form:form method="POST" modelAttribute="messageForm">
                     <spring:bind path="text">
                         <div class="form-group">
+                            <form:errors path="text" class="form-text text-danger"/>
                             <form:textarea path="text" title="Сообщение:" class="form-control"
                                            placeholder="Введите ваше сообщение..."/>
-                            <form:errors path="text" class="form-text text-danger"/>
                         </div>
                     </spring:bind>
                     <div class="form-group">

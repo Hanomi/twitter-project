@@ -5,6 +5,7 @@ import io.shifu.twitterproject.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -20,5 +21,11 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<Message> findAll() {
         return messageRepository.findAll();
+    }
+
+    @Override
+    public void save(Message message) {
+        message.setDate(new Date());
+        messageRepository.save(message);
     }
 }
