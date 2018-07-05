@@ -26,23 +26,12 @@
     <c:if test="${!empty messagesList}">
         <div class="row">
             <div class="col">
-                <table class="table table-hover">
-                    <thead class="thead-light">
-                    <tr>
-                        <th scope="col">Сообщения:</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach items="${messagesList}" var="message">
-                        <tr>
-                            <td>
-                                <p>${message.date}</p>
-                                <p>${message.text}</p>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
+                <c:forEach items="${messagesList}" var="message">
+                    <div class="blog-post">
+                        <p class="blog-post-meta">${message.date}</p>
+                        <p>${message.text}</p>
+                    </div>
+                </c:forEach>
             </div>
         </div>
     </c:if>

@@ -30,3 +30,27 @@ body > .container {
 code {
     font-size: 80%;
 }
+
+/* Pagination */
+.blog-pagination {
+    margin-bottom: 4rem;
+}
+.blog-pagination > .btn {
+    border-radius: 2rem;
+}
+
+/*
+ * Blog posts
+ */
+.blog-post {
+    margin-bottom: 1rem;
+    border-bottom: 1px dotted black;
+}
+.blog-post-title {
+    margin-bottom: .25rem;
+    font-size: 2rem;
+}
+.blog-post-meta {
+    margin-bottom: .6rem;
+    color: #999;
+}
