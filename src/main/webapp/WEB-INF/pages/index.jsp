@@ -23,10 +23,10 @@
             </div>
         </div>
     </c:if>
-    <c:if test="${!empty messagesList}">
+    <c:if test="${!empty messagesList.content}">
         <div class="row">
             <div class="col">
-                <c:forEach items="${messagesList}" var="message">
+                <c:forEach items="${messagesList.content}" var="message">
                     <div class="blog-post">
                         <p class="blog-post-meta">${message.date}</p>
                         <p>${message.text}</p>
@@ -34,6 +34,10 @@
                 </c:forEach>
             </div>
         </div>
+
+        <c:if test="${messagesList.totalPages != 1}">
+            <%@include file="templates/pagination.jspf" %>
+        </c:if>
     </c:if>
 </main>
 
