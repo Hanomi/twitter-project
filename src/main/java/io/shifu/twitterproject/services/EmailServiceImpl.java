@@ -30,6 +30,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Async
+    @Override
     public void sendEmail(SimpleMailMessage email) {
         mailSender.send(email);
     }
