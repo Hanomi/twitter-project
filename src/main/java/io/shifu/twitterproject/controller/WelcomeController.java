@@ -32,7 +32,7 @@ public class WelcomeController {
         // форма добавления
         model.addAttribute("messageForm", new Message());
 
-        // заголовок
+        model.addAttribute("active", "general");
         model.addAttribute("title", "Твиттер");
         return "index";
     }
@@ -43,13 +43,13 @@ public class WelcomeController {
 
         if (!bindingResult.hasErrors()) {
             messageService.save(message);
-            return "redirect:/";
+            model.addAttribute("messageForm", new Message());
         }
 
         // все сообщения на главной
         model.addAttribute("messagesList", messageService.findAll());
 
-        // заголовок
+        model.addAttribute("active", "general");
         model.addAttribute("title", "Твиттер");
 
         return "index";

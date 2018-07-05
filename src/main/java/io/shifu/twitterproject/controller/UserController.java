@@ -30,7 +30,7 @@ public class UserController {
         if (logout != null) {
             model.addAttribute("message", "Выход выполнен");
         }
-        // заголовок
+        model.addAttribute("active", "login");
         model.addAttribute("title", "Введите данные своего аккаунта");
         return "login";
     }
@@ -39,6 +39,7 @@ public class UserController {
     public String getRegistrationPage(Model model) {
         model.addAttribute("userForm", new User());
 
+        model.addAttribute("active", "login");
         model.addAttribute("title", "Регистрация аккаунта");
         return "registration";
     }
@@ -48,7 +49,8 @@ public class UserController {
         userValidator.validate(userForm, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("title", "Create an account");
+            model.addAttribute("active", "login");
+            model.addAttribute("title", "Регистрация аккаута");
             return "registration";
         }
 
@@ -72,7 +74,7 @@ public class UserController {
         userService.save(userForm);
 
         model.addAttribute("message", "A confirmation e-mail has been sent to " + userForm.getEmail());
-
+        model.addAttribute("active", "login");
         model.addAttribute("title", "Введите данные своего аккаунта");
         return "login";
     }
@@ -81,6 +83,7 @@ public class UserController {
     @GetMapping("/confirm")
     public String confirm(Model model, @RequestParam("token") String token) {
         if (token == null || token.isEmpty()) {
+            model.addAttribute("active", "login");
             model.addAttribute("error", "Ссылка недействительна.");
             return "login";
         }
@@ -91,6 +94,7 @@ public class UserController {
             model.addAttribute("message", user.getUsername() + " успешно активирован");
             userService.activationUser(user);
         }
+        model.addAttribute("active", "login");
         model.addAttribute("title", "Введите данные своего аккаунта");
         return "login";
     }

@@ -13,13 +13,26 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item"> <%--todo class=active - for current link--%>
+                    <li class="nav-item ${active.equals("general") ? "active" : ""}">
                         <a class="nav-link" href="${contextPath}/">Главная</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="${contextPath}/login">Войти</a>
+                    <li class="nav-item ${active.equals("login") ? "active" : ""}">
+                        <c:if test="${pageContext.request.userPrincipal.name == null}">
+                            <a class="nav-link" href="${contextPath}/login">Войти</a>
+                        </c:if>
+                        <c:if test="${pageContext.request.userPrincipal.name != null}">
+                            <form id="logoutForm" method="post" action="${contextPath}/logout">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                            </form>
+                            <a class="nav-link" href="#" onclick="document.forms['logoutForm'].submit()">Выйти</a>
+                        </c:if>
                     </li>
                 </ul>
+                <c:if test="${pageContext.request.userPrincipal.name != null}">
+                    <span class="navbar-text">
+                            ${pageContext.request.userPrincipal.name}
+                    </span>
+                </c:if>
             </div>
         </div>
     </nav>
