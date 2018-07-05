@@ -21,6 +21,7 @@
 		<hibernate-validator.version>6.0.10.Final</hibernate-validator.version>
 		<jservlet.version>4.0.1</jservlet.version>
 		<jstl.version>1.2</jstl.version>
+		<jmail.version>1.4.7</jmail.version>
 	</properties>
 
 	<dependencies>
@@ -90,6 +91,12 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>${jstl.version}</version>
+		</dependency>
+		<!--mail-->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>${jmail.version}</version>
 		</dependency>
         <!--jaxb-->
         <dependency>
