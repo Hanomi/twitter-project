@@ -11,7 +11,7 @@
                 <form:form method="POST" modelAttribute="messageForm">
                     <spring:bind path="text">
                         <div class="form-group">
-                            <form:errors path="text" class="form-text text-danger"/>
+                            <form:errors path="text" class="alert alert-danger" element="div"/>
                             <form:textarea path="text" title="Сообщение:" class="form-control"
                                            placeholder="Введите ваше сообщение..."/>
                         </div>
