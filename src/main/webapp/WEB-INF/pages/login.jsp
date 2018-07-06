@@ -29,7 +29,7 @@
                 </div>
                 <div class="form-group">
                     <a href="${contextPath}/registration" class="text-primary">Зарегистрироваться</a> или
-                    <a href="#" class="text-primary">Восстановить пароль</a>
+                    <a href="${contextPath}/forgot-password" class="text-primary">Восстановить пароль</a>
                 </div>
             </form>
         </div>

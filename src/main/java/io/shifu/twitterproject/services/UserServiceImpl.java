@@ -44,9 +44,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void changePassword(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setConfirmationToken(null);
+        user.setEnabled(true);
+        userRepository.save(user);
+    }
+
+    @Override
     public void activationUser(User user) {
         // активируем пользователя
         user.setConfirmationToken(null);
+        user.setResetToken(null);
         user.setEnabled(true);
         userRepository.save(user);
     }
@@ -57,6 +66,11 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = new HashSet<>();
         roles.add(roleRepository.getOne(1L));
         user.setRoles(roles);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void saveChange(User user) {
         userRepository.save(user);
     }
 
@@ -78,5 +92,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByVkId(Long id) {
         return userRepository.findByVkId(id);
+    }
+
+    @Override
+    public User findByResetToken(String resetToken) {
+        return userRepository.findByResetToken(resetToken);
     }
 }

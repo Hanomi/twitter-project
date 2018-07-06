@@ -30,14 +30,17 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "confirmation_token")
-    private String confirmationToken;
-
     @Column(name = "enabled")
     private boolean enabled;
 
     @Column(name = "vk_id")
     private long vkId;
+
+    @Column(name = "confirmation_token")
+    private String confirmationToken;
+
+    @Column(name = "reset_token")
+    private String resetToken;
 
     public long getId() {
         return id;
@@ -87,14 +90,6 @@ public class User {
         this.email = email;
     }
 
-    public String getConfirmationToken() {
-        return confirmationToken;
-    }
-
-    public void setConfirmationToken(String confirmationToken) {
-        this.confirmationToken = confirmationToken;
-    }
-
     public boolean isEnabled() {
         return enabled;
     }
@@ -109,5 +104,21 @@ public class User {
 
     public void setVkId(long vkId) {
         this.vkId = vkId;
+    }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public String getConfirmationToken() {
+        return confirmationToken;
+    }
+
+    public void setConfirmationToken(String confirmationToken) {
+        this.confirmationToken = confirmationToken;
     }
 }

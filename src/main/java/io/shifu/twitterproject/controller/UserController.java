@@ -5,7 +5,6 @@ import io.shifu.twitterproject.services.EmailService;
 import io.shifu.twitterproject.services.UserService;
 import io.shifu.twitterproject.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -66,13 +65,10 @@ public class UserController {
 
         // Send email
         String appUrl = "http://localhost:8080";
-        SimpleMailMessage registrationEmail = new SimpleMailMessage();
-        registrationEmail.setTo(userForm.getEmail());
-        registrationEmail.setSubject("Registration Confirmation");
-        registrationEmail.setText("To confirm your e-mail address, please click the link below:\n"
-                + appUrl + "/confirm?token=" + userForm.getConfirmationToken());
-        registrationEmail.setFrom("nproject1meir@gmail.com");
-        emailService.sendEmail(registrationEmail);
+        String subject = "Registration Confirmation";
+        String text = "To confirm your e-mail address, please click the link below:\n"
+                + appUrl + "/confirm?token=" + userForm.getConfirmationToken();
+        emailService.sendEmail(userForm.getEmail(), subject, text);
 
         // Save user
         userService.save(userForm);
