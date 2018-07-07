@@ -2,9 +2,12 @@ package io.shifu.twitterproject.controller;
 
 import io.shifu.twitterproject.model.Message;
 import io.shifu.twitterproject.services.MessageService;
+import io.shifu.twitterproject.services.UserService;
 import io.shifu.twitterproject.validator.MessageValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,11 +21,13 @@ public class WelcomeController {
 
     private final MessageService messageService;
     private final MessageValidator messageValidator;
+    private final UserService userService;
 
     @Autowired
-    public WelcomeController(MessageService messageService, MessageValidator messageValidator) {
+    public WelcomeController(MessageService messageService, MessageValidator messageValidator, UserService userService) {
         this.messageService = messageService;
         this.messageValidator = messageValidator;
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -37,10 +42,12 @@ public class WelcomeController {
     }
 
     @PostMapping("/")
-    public String messageAdd(Model model, @ModelAttribute("messageForm") Message message, BindingResult bindingResult) {
+    public String messageAdd(Model model, @ModelAttribute("messageForm") Message message,
+                             @AuthenticationPrincipal User user, BindingResult bindingResult) {
         messageValidator.validate(message, bindingResult);
 
         if (!bindingResult.hasErrors()) {
+            message.setUser(userService.findByUsername(user.getUsername()));
             messageService.save(message);
             model.addAttribute("messageForm", new Message());
         }
@@ -64,10 +71,12 @@ public class WelcomeController {
     }
 
     @PostMapping("/pages/{pageNumber}")
-    public String postPage(Model model, @PathVariable("pageNumber") Integer pageNumber, @ModelAttribute("messageForm") Message message, BindingResult bindingResult) {
+    public String postPage(Model model, @PathVariable("pageNumber") Integer pageNumber, @ModelAttribute("messageForm") Message message,
+                           @AuthenticationPrincipal User user, BindingResult bindingResult) {
         messageValidator.validate(message, bindingResult);
 
         if (!bindingResult.hasErrors()) {
+            message.setUser(userService.findByUsername(user.getUsername()));
             messageService.save(message);
             model.addAttribute("messageForm", new Message());
         }
