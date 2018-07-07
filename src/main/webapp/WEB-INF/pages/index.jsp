@@ -28,18 +28,22 @@
             <div class="col">
                 <c:forEach items="${messagesList.content}" var="message">
                     <div class="blog-post">
-                        <p class="blog-post-meta">${message.date} by ${message.user.username}</p>
+                        <p class="blog-post-meta">${message.date} by ${message.user.username}
+                            <c:if test="${pageContext.request.userPrincipal.name == message.user.username}">
+                                <a href="#" class="text-info"> <i class="far fa-edit"></i></a>
+                            </c:if>
+                        </p>
                         <p>${message.text}</p>
                     </div>
                 </c:forEach>
             </div>
         </div>
 
-        <c:url var="firstUrl" value="/pages/1" />
+        <c:url var="firstUrl" value="/pages/1"/>
         <c:url var="page" value="/pages"/>
-        <c:url var="lastUrl" value="/pages/${messagesList.totalPages}" />
-        <c:url var="prevUrl" value="/pages/${currentIndex - 1}" />
-        <c:url var="nextUrl" value="/pages/${currentIndex + 1}" />
+        <c:url var="lastUrl" value="/pages/${messagesList.totalPages}"/>
+        <c:url var="prevUrl" value="/pages/${currentIndex - 1}"/>
+        <c:url var="nextUrl" value="/pages/${currentIndex + 1}"/>
         <c:if test="${messagesList.totalPages != 1}">
             <%@include file="templates/pagination.jspf" %>
         </c:if>
