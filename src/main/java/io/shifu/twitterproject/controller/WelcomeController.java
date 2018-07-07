@@ -47,7 +47,7 @@ public class WelcomeController {
 
         Page<Message> page = messageService.findAll(1);
 
-        makePage(page, model);;
+        makePage(page, model);
 
         return "index";
     }
@@ -79,7 +79,7 @@ public class WelcomeController {
         return "index";
     }
 
-    private void makePage(Page page, Model model) {
+    protected static void makePage(Page page, Model model) {
         int current = page.getNumber() + 1;
         int begin = Math.max(1, current - 5);
         int end = Math.min(begin + 10, page.getTotalPages());

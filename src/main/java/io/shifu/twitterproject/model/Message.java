@@ -17,6 +17,10 @@ public class Message {
     @Column(name = "date")
     private Date date;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     public long getId() {
         return id;
     }
@@ -39,5 +43,13 @@ public class Message {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

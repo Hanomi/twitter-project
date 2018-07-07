@@ -1,6 +1,7 @@
 package io.shifu.twitterproject.services;
 
 import io.shifu.twitterproject.model.Message;
+import io.shifu.twitterproject.model.User;
 import io.shifu.twitterproject.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,5 +37,10 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Page<Message> findAll(Integer pageNumber) {
         return messageRepository.findAll(PageRequest.of(pageNumber-1, PAGE_SIZE, Sort.Direction.DESC, "date"));
+    }
+
+    @Override
+    public Page<Message> findAllByUser(User user, Integer pageNumber) {
+        return messageRepository.findAllByUser(user, PageRequest.of(pageNumber-1, PAGE_SIZE, Sort.Direction.DESC, "date"));
     }
 }

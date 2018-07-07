@@ -28,7 +28,7 @@
             <div class="col">
                 <c:forEach items="${messagesList.content}" var="message">
                     <div class="blog-post">
-                        <p class="blog-post-meta">${message.date}</p>
+                        <p class="blog-post-meta">${message.date} by ${message.user.username}</p>
                         <p>${message.text}</p>
                     </div>
                 </c:forEach>

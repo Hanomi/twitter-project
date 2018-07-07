@@ -2,6 +2,8 @@ package io.shifu.twitterproject.services;
 
 import io.shifu.twitterproject.model.User;
 
+import java.util.Optional;
+
 public interface UserService {
 
     void save(User user);
@@ -9,6 +11,8 @@ public interface UserService {
     void saveVk(User user);
 
     void saveChange(User user);
+
+    Optional<User> findById(Long id);
 
     User findByUsername(String username);
 
