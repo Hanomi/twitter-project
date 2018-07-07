@@ -32,10 +32,35 @@ public class MessageController {
 
         Page<Message> page = messageService.findAllByUser(optionalUser.get(),1);
 
-        WelcomeController.makePage(page, model);
+        makePage(page, model);
+        model.addAttribute("userId", id);
 
-        return "index";
+        return "user";
+    }
+
+    @GetMapping("/user/{id}/pages/{pageId}")
+    public String getUserMessagesPage(Model model, @PathVariable("id") Long id, @PathVariable("pageId") Integer pageId) {
+        Optional<User> optionalUser = userService.findById(id);
+        if (!optionalUser.isPresent()) return "redirect:/";
+
+        Page<Message> page = messageService.findAllByUser(optionalUser.get(),pageId);
+
+        makePage(page, model);
+        model.addAttribute("userId", id);
+
+        return "user";
     }
 
 
+    private static void makePage(Page page, Model model) {
+        int current = page.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, page.getTotalPages());
+        model.addAttribute("messagesList", page);
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current);
+        model.addAttribute("active", "general");
+        model.addAttribute("title", "Твиттер");
+    }
 }

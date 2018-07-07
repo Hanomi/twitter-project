@@ -35,6 +35,11 @@
             </div>
         </div>
 
+        <c:url var="firstUrl" value="/pages/1" />
+        <c:url var="page" value="/pages"/>
+        <c:url var="lastUrl" value="/pages/${messagesList.totalPages}" />
+        <c:url var="prevUrl" value="/pages/${currentIndex - 1}" />
+        <c:url var="nextUrl" value="/pages/${currentIndex + 1}" />
         <c:if test="${messagesList.totalPages != 1}">
             <%@include file="templates/pagination.jspf" %>
         </c:if>

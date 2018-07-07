@@ -88,7 +88,7 @@ public class WelcomeController {
         return "index";
     }
 
-    protected static void makePage(Page page, Model model) {
+    private static void makePage(Page page, Model model) {
         int current = page.getNumber() + 1;
         int begin = Math.max(1, current - 5);
         int end = Math.min(begin + 10, page.getTotalPages());

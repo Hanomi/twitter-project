@@ -1,10 +1,5 @@
 <%@page pageEncoding="UTF-8" %>
 
-<c:url var="firstUrl" value="/pages/1" />
-<c:url var="lastUrl" value="/pages/${messagesList.totalPages}" />
-<c:url var="prevUrl" value="/pages/${currentIndex - 1}" />
-<c:url var="nextUrl" value="/pages/${currentIndex + 1}" />
-
 <nav aria-label="Page navigation">
     <ul class="pagination">
         <c:choose>
@@ -38,7 +33,7 @@
             </c:otherwise>
         </c:choose>
         <c:forEach var="i" begin="${beginIndex}" end="${endIndex}">
-            <c:url var="pageUrl" value="/pages/${i}" />
+            <c:url var="pageUrl" value="${page}/${i}" />
             <c:choose>
                 <c:when test="${i == currentIndex}">
                     <li class="page-item active">
