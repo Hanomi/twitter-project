@@ -28,6 +28,9 @@ public class Message {
     @OneToMany(mappedBy="message", fetch = FetchType.EAGER)
     private Set<Like> likes;
 
+    @Column(name = "retweet")
+    private long retweet;
+
     public long getId() {
         return id;
     }
@@ -66,5 +69,13 @@ public class Message {
 
     public void setLikes(Set<Like> likes) {
         this.likes = likes;
+    }
+
+    public long getRetweet() {
+        return retweet;
+    }
+
+    public void setRetweet(long retweet) {
+        this.retweet = retweet;
     }
 }
