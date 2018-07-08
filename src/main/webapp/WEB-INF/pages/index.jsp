@@ -4,6 +4,8 @@
 <%@include file="templates/start.jspf" %>
 <%@include file="templates/header.jspf" %>
 
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+
 <main role="main" class="container">
     <c:if test="${pageContext.request.userPrincipal.name != null}">
         <div class="row">
@@ -23,7 +25,7 @@
                         <c:choose>
                         <c:when test="${editMode}">
                             <form:button type="submit" class="btn btn-secondary">Сохранить</form:button>
-                            <a class="btn btn-secondary" href="${contextPath}${currentUrl}" role="button">Отмена</a>
+                            <a class="btn btn-secondary" href="${contextPath}${currentUrl}/" role="button">Отмена</a>
                         </c:when>
                         <c:otherwise>
                             <form:button type="submit" class="btn btn-secondary">Добавить</form:button>
@@ -44,6 +46,14 @@
                             <c:if test="${pageContext.request.userPrincipal.name == message.user.username}">
                                 <a href="${contextPath}${currentUrl}/edit/${message.id}" class="text-info"> <i class="far fa-edit"></i></a>
                             </c:if>
+                            <c:choose>
+                                <c:when test="${liked.contains(message.id)}">
+                                    <a href="${contextPath}${currentUrl}/like/${message.id}" class="text-danger"> <i class="far fa-heart"></i><span class="badge badge-light">${message.likes.size()}</span></a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="${contextPath}${currentUrl}/like/${message.id}" class="text-muted"> <i class="far fa-heart"></i><span class="badge badge-light">${message.likes.size()}</span></a>
+                                </c:otherwise>
+                            </c:choose>
                         </p>
                         <p>${message.text}</p>
                     </div>

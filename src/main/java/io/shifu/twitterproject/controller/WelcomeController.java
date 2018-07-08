@@ -1,7 +1,9 @@
 package io.shifu.twitterproject.controller;
 
+import io.shifu.twitterproject.model.Like;
 import io.shifu.twitterproject.model.Message;
 import io.shifu.twitterproject.model.User;
+import io.shifu.twitterproject.services.LikeService;
 import io.shifu.twitterproject.services.MessageService;
 import io.shifu.twitterproject.services.UserService;
 import io.shifu.twitterproject.validator.MessageValidator;
@@ -13,8 +15,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Controller
 public class WelcomeController {
@@ -22,20 +27,21 @@ public class WelcomeController {
     private final MessageService messageService;
     private final MessageValidator messageValidator;
     private final UserService userService;
+    private final LikeService likeService;
 
     @Autowired
-    public WelcomeController(MessageService messageService, MessageValidator messageValidator, UserService userService) {
+    public WelcomeController(MessageService messageService, MessageValidator messageValidator, UserService userService, LikeService likeService) {
         this.messageService = messageService;
         this.messageValidator = messageValidator;
         this.userService = userService;
+        this.likeService = likeService;
     }
 
     @GetMapping({"/", "/pages/{pageId}", "/edit/{messageId}", "/pages/{pageId}/edit/{messageId}",
             "/user/{id}", "/user/{id}/pages/{pageId}", "/user/{id}/edit/{messageId}", "/user/{id}/pages/{pageId}/edit/{messageId}"})
-    public String getView(Model model, @PathVariable("id") Optional<Long> id,
+    public String getView(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user, @PathVariable("id") Optional<Long> id,
                                   @PathVariable("pageId") Optional<Integer> pageId, @PathVariable("messageId") Optional<Long> messageId) {
         String url = id.map(user_id -> "/user/" + user_id).orElse("") + pageId.map(page_id -> "/pages/" + page_id).orElse("");
-        if (url.isEmpty()) url = "/";
         if (messageId.isPresent()) {
             Optional<Message> optionalMessage = messageService.findById(messageId.get());
             if (!optionalMessage.isPresent()) return "redirect:" + url;
@@ -56,6 +62,21 @@ public class WelcomeController {
             page = messageService.findAll(pageId.orElse(1));
         }
         makePage(page, model);
+
+
+        List<Long> likedList = new ArrayList<>();
+        if (user != null) {
+            for (Message msg : page.getContent()) {
+                for (Like like : msg.getLikes()) {
+                    if (like.getUser().equals(user.getUsername())) {
+                        likedList.add(like.getMessage());
+                    }
+                }
+            }
+        }
+        model.addAttribute("liked", likedList);
+
+
         return "index";
     }
 
@@ -67,12 +88,11 @@ public class WelcomeController {
                                   @PathVariable("messageId") Optional<Long> messageId, BindingResult bindingResult) {
         messageValidator.validate(message, bindingResult);
         String url = id.map(user_id -> "/user/" + user_id).orElse("") + pageId.map(page_id -> "/pages/" + page_id).orElse("");
-        if (url.isEmpty()) url = "/";
         if (!bindingResult.hasErrors()) {
             if (messageId.isPresent()) {
                 message.setUser(userService.findByUsername(user.getUsername()));
                 messageService.save(message);
-                return "redirect:" + url;
+                return "redirect:" + (url.isEmpty() ? "/" : url);
             } else {
                 message.setUser(userService.findByUsername(user.getUsername()));
                 message.setDate(new Date());
@@ -93,6 +113,23 @@ public class WelcomeController {
         }
         makePage(page, model);
         return "index";
+    }
+
+    @GetMapping({"/like/{likeId}", "/pages/{pageId}/like/{likeId}",
+            "/user/{id}/like/{likeId}", "/user/{id}/pages/{pageId}/like/{likeId}"})
+    public String like(Model model, @PathVariable("likeId") Long likeId, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user, @PathVariable("id") Optional<Long> id, @PathVariable("pageId") Optional<Integer> pageId) {
+        String url = id.map(user_id -> "/user/" + user_id).orElse("") + pageId.map(page_id -> "/pages/" + page_id).orElse("");
+        if (user != null && !user.getUsername().equals(messageService.findById(likeId).get().getUser().getUsername())) {
+            if (likeService.liked(likeId, user.getUsername())) {
+                likeService.delete(likeId, user.getUsername());
+            } else {
+                Like like = new Like();
+                like.setMessage(likeId);
+                like.setUser(user.getUsername());
+                likeService.save(like);
+            }
+        }
+        return "redirect:" + (url.isEmpty() ? "/" : url);
     }
 
     private static void makePage(Page page, Model model) {

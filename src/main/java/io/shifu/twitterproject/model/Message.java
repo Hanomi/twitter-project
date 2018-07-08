@@ -4,6 +4,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "messages")
@@ -23,6 +24,9 @@ public class Message {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy="message", fetch = FetchType.EAGER)
+    private Set<Like> likes;
 
     public long getId() {
         return id;
@@ -54,5 +58,13 @@ public class Message {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Set<Like> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Set<Like> likes) {
+        this.likes = likes;
     }
 }
