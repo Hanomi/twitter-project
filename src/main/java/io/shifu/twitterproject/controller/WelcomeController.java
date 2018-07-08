@@ -132,6 +132,22 @@ public class WelcomeController {
         return "redirect:" + (url.isEmpty() ? "/" : url);
     }
 
+    @GetMapping({"/retweet/{retweetId}", "/pages/{pageId}/retweet/{retweetId}",
+            "/user/{id}/retweet/{retweetId}", "/user/{id}/pages/{pageId}/retweet/{retweetId}"})
+    public String retweet(Model model, @PathVariable("retweetId") Long retweetId, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user, @PathVariable("id") Optional<Long> id, @PathVariable("pageId") Optional<Integer> pageId) {
+        String url = id.map(user_id -> "/user/" + user_id).orElse("") + pageId.map(page_id -> "/pages/" + page_id).orElse("");
+        if (user != null && !user.getUsername().equals(messageService.findById(retweetId).get().getUser().getUsername())) {
+            Message message = new Message();
+            Message oldMessage = messageService.findById(retweetId).get();
+            message.setText(oldMessage.getText());
+            message.setDate(new Date());
+            message.setUser(userService.findByUsername(user.getUsername()));
+            message.setRetweet(retweetId);
+            messageService.save(message);
+        }
+        return "redirect:" + (url.isEmpty() ? "/" : url);
+    }
+
     private static void makePage(Page page, Model model) {
         int current = page.getNumber() + 1;
         int begin = Math.max(1, current - 5);
