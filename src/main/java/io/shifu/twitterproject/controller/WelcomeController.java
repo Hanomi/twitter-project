@@ -1,20 +1,20 @@
 package io.shifu.twitterproject.controller;
 
 import io.shifu.twitterproject.model.Message;
+import io.shifu.twitterproject.model.User;
 import io.shifu.twitterproject.services.MessageService;
 import io.shifu.twitterproject.services.UserService;
 import io.shifu.twitterproject.validator.MessageValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.Optional;
 
 @Controller
 public class WelcomeController {
@@ -30,61 +30,68 @@ public class WelcomeController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
-    public String index(Model model) {
-
-        Page<Message> page = messageService.findAll(1);
-
-        makePage(page, model);
-
-        model.addAttribute("messageForm", new Message());
-        return "index";
-    }
-
-    @PostMapping("/")
-    public String messageAdd(Model model, @ModelAttribute("messageForm") Message message,
-                             @AuthenticationPrincipal User user, BindingResult bindingResult) {
-        messageValidator.validate(message, bindingResult);
-
-        if (!bindingResult.hasErrors()) {
-            message.setUser(userService.findByUsername(user.getUsername()));
-            messageService.save(message);
+    @GetMapping({"/", "/pages/{pageId}", "/edit/{messageId}", "/pages/{pageId}/edit/{messageId}",
+            "/user/{id}", "/user/{id}/pages/{pageId}", "/user/{id}/edit/{messageId}", "/user/{id}/pages/{pageId}/edit/{messageId}"})
+    public String getView(Model model, @PathVariable("id") Optional<Long> id,
+                                  @PathVariable("pageId") Optional<Integer> pageId, @PathVariable("messageId") Optional<Long> messageId) {
+        String url = id.map(user_id -> "/user/" + user_id).orElse("") + pageId.map(page_id -> "/pages/" + page_id).orElse("");
+        if (url.isEmpty()) url = "/";
+        if (messageId.isPresent()) {
+            Optional<Message> optionalMessage = messageService.findById(messageId.get());
+            if (!optionalMessage.isPresent()) return "redirect:" + url;
+            model.addAttribute("messageForm", optionalMessage.get());
+            model.addAttribute("editMode", true);
+        } else {
             model.addAttribute("messageForm", new Message());
         }
-
-        Page<Message> page = messageService.findAll(1);
-
-        makePage(page, model);
-
-        return "index";
-    }
-
-    @GetMapping("/pages/{pageNumber}")
-    public String getPage(Model model, @PathVariable("pageNumber") Integer pageNumber) {
-        Page<Message> page = messageService.findAll(pageNumber);
-
-        makePage(page, model);
-
-        model.addAttribute("messageForm", new Message());
-
-        return "index";
-    }
-
-    @PostMapping("/pages/{pageNumber}")
-    public String postPage(Model model, @PathVariable("pageNumber") Integer pageNumber, @ModelAttribute("messageForm") Message message,
-                           @AuthenticationPrincipal User user, BindingResult bindingResult) {
-        messageValidator.validate(message, bindingResult);
-
-        if (!bindingResult.hasErrors()) {
-            message.setUser(userService.findByUsername(user.getUsername()));
-            messageService.save(message);
-            model.addAttribute("messageForm", new Message());
+        model.addAttribute("currentUrl", url);
+        model.addAttribute("pagePath", id.map(aLong -> "/user/" + aLong + "/pages/").orElse("/pages/"));
+        model.addAttribute("userId", id);
+        Page<Message> page;
+        if (id.isPresent()) {
+            Optional<User> optionalUser = userService.findById(id.get());
+            if (!optionalUser.isPresent()) return "redirect:/";
+            page = messageService.findAllByUser(optionalUser.get(), pageId.orElse(1));
+        } else {
+            page = messageService.findAll(pageId.orElse(1));
         }
-
-        Page<Message> page = messageService.findAll(pageNumber);
-
         makePage(page, model);
+        return "index";
+    }
 
+    @PostMapping({"/", "/pages/{pageId}", "/edit/{messageId}", "/pages/{pageId}/edit/{messageId}",
+            "/user/{id}", "/user/{id}/pages/{pageId}", "/user/{id}/edit/{messageId}", "/user/{id}/pages/{pageId}/edit/{messageId}"})
+    public String postView(Model model, @ModelAttribute("messageForm") Message message,
+                                  @AuthenticationPrincipal org.springframework.security.core.userdetails.User user,
+                                  @PathVariable("id") Optional<Long> id, @PathVariable("pageId") Optional<Integer> pageId,
+                                  @PathVariable("messageId") Optional<Long> messageId, BindingResult bindingResult) {
+        messageValidator.validate(message, bindingResult);
+        String url = id.map(user_id -> "/user/" + user_id).orElse("") + pageId.map(page_id -> "/pages/" + page_id).orElse("");
+        if (url.isEmpty()) url = "/";
+        if (!bindingResult.hasErrors()) {
+            if (messageId.isPresent()) {
+                message.setUser(userService.findByUsername(user.getUsername()));
+                messageService.save(message);
+                return "redirect:" + url;
+            } else {
+                message.setUser(userService.findByUsername(user.getUsername()));
+                message.setDate(new Date());
+                messageService.save(message);
+                model.addAttribute("messageForm", new Message());
+            }
+        }
+        model.addAttribute("currentUrl", url);
+        model.addAttribute("pagePath", id.map(aLong -> "/user/" + aLong + "/pages/").orElse("/pages/"));
+        model.addAttribute("userId", id);
+        Page<Message> page;
+        if (id.isPresent()) {
+            Optional<User> optionalUser = userService.findById(id.get());
+            if (!optionalUser.isPresent()) return "redirect:/";
+            page = messageService.findAllByUser(optionalUser.get(), pageId.orElse(1));
+        } else {
+            page = messageService.findAll(pageId.orElse(1));
+        }
+        makePage(page, model);
         return "index";
     }
 

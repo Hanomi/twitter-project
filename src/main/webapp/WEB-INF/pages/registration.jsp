@@ -42,7 +42,7 @@
                     </div>
                 </spring:bind>
 
-                <button type="submit" class="btn btn-default">Отправить</button>
+                <button type="submit" class="btn btn-secondary">Отправить</button>
             </form:form>
         </div>
     </div>

@@ -16,7 +16,7 @@
                 </div>
                 <div class="form-group">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    <button type="submit" class="btn btn-default">Отправить</button>
+                    <button type="submit" class="btn btn-secondary">Отправить</button>
                 </div>
             </form>
         </div>

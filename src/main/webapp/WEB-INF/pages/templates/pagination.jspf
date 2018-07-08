@@ -33,7 +33,7 @@
             </c:otherwise>
         </c:choose>
         <c:forEach var="i" begin="${beginIndex}" end="${endIndex}">
-            <c:url var="pageUrl" value="${page}/${i}" />
+            <c:url var="pageUrl" value="${page}${i}" />
             <c:choose>
                 <c:when test="${i == currentIndex}">
                     <li class="page-item active">

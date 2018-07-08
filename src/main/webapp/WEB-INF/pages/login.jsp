@@ -25,7 +25,7 @@
                 </div>
                 <div class="form-group">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    <button type="submit" class="btn btn-default">Войти</button>
+                    <button type="submit" class="btn btn-secondary">Войти</button>
                 </div>
                 <div class="form-group">
                     <a href="${contextPath}/registration" class="text-primary">Зарегистрироваться</a> или

@@ -1,5 +1,7 @@
 package io.shifu.twitterproject.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -15,6 +17,7 @@ public class Message {
     private String text;
 
     @Column(name = "date")
+    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private Date date;
 
     @ManyToOne
