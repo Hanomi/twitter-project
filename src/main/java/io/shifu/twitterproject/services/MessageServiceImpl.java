@@ -16,7 +16,7 @@ import java.util.Optional;
 public class MessageServiceImpl implements MessageService {
 
     private final MessageRepository messageRepository;
-    private static final int PAGE_SIZE = 5;
+    private static final int PAGE_SIZE = 10;
 
     @Autowired
     public MessageServiceImpl(MessageRepository messageRepository) {
