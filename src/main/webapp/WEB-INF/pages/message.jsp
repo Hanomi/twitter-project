@@ -42,7 +42,7 @@
             <div class="col">
                 <c:forEach items="${messagesList.content}" var="message">
                     <div class="blog-post">
-                        <p class="blog-post-meta"><c:if test="${message.retweet != null}"><span class="badge badge-success">Retweet</span></c:if>
+                        <p class="blog-post-meta"><c:if test="${message.retweet != 0}"><span class="badge badge-success">Retweet</span></c:if>
                             <fmt:formatDate pattern = "dd/MM/yyyy HH:mm:ss" value = "${message.date}" /> by ${message.user.username}
                             <c:if test="${pageContext.request.userPrincipal.name == message.user.username}">
                                 <a href="${contextPath}${currentUrl}/edit/${message.id}" class="text-info"> <i class="far fa-edit"></i></a>

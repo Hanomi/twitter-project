@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Controller
 public class WelcomeController {
@@ -142,7 +141,7 @@ public class WelcomeController {
             message.setText(oldMessage.getText());
             message.setDate(new Date());
             message.setUser(userService.findByUsername(user.getUsername()));
-            message.setRetweet(retweetId);
+            message.setRetweet(oldMessage);
             messageService.save(message);
         }
         return "redirect:" + (url.isEmpty() ? "/" : url);
