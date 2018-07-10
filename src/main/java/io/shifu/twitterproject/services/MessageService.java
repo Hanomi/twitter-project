@@ -11,8 +11,6 @@ public interface MessageService {
 
     Optional<Message> findById(Long id);
 
-    List<Message> findAll();
-
     void save(Message message);
 
     Page<Message> findAll(Integer pageNumber);

@@ -29,18 +29,13 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> findAll() {
-        return messageRepository.findAll();
-    }
-
-    @Override
     public void save(Message message) {
         messageRepository.save(message);
     }
 
     @Override
     public Page<Message> findAll(Integer pageNumber) {
-        return messageRepository.findAll(PageRequest.of(pageNumber-1, PAGE_SIZE, Sort.Direction.DESC, "date"));
+        return messageRepository.findAllByAnswerIsNull(PageRequest.of(pageNumber-1, PAGE_SIZE, Sort.Direction.DESC, "date"));
     }
 
     @Override
