@@ -18,4 +18,6 @@ public interface MessageService {
     Page<Message> findAll(Integer pageNumber);
 
     Page<Message> findAllByUser(User user, Integer pageNumber);
+
+    Page<Message> findAllByAnswer(Message message, Integer pageNumber);
 }

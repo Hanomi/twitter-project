@@ -47,4 +47,9 @@ public class MessageServiceImpl implements MessageService {
     public Page<Message> findAllByUser(User user, Integer pageNumber) {
         return messageRepository.findAllByUser(user, PageRequest.of(pageNumber-1, PAGE_SIZE, Sort.Direction.DESC, "date"));
     }
+
+    @Override
+    public Page<Message> findAllByAnswer(Message message, Integer pageNumber) {
+        return messageRepository.findAllByAnswer(message, PageRequest.of(pageNumber-1, PAGE_SIZE, Sort.Direction.DESC, "date"));
+    }
 }

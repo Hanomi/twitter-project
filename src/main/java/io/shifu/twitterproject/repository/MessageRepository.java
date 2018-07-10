@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
     Page<Message> findAllByUser(User user, Pageable pageable);
+
+    Page<Message> findAllByAnswer(Message message, Pageable pageable);
 }

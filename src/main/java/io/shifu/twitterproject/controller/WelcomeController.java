@@ -147,6 +147,41 @@ public class WelcomeController {
         return "redirect:" + (url.isEmpty() ? "/" : url);
     }
 
+    @GetMapping({"/message/{messageId}", "/message/{messageId}/pages/{pageId}"})
+    public String getMessage(Model model, @PathVariable("messageId") Long messageId, @PathVariable("pageId") Optional<Integer> pageId, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user) {
+        Optional<Message> optionalMessage = messageService.findById(messageId);
+        if (optionalMessage.isPresent()) {
+            model.addAttribute("currentMessage", optionalMessage.get());
+            String url = "/message/" + messageId + pageId.map(page_id -> "/pages/" + page_id).orElse("");
+            model.addAttribute("messageForm", new Message());
+            model.addAttribute("currentUrl", url);
+            model.addAttribute("pagePath", "/message/" + messageId + "/pages/");
+            Page<Message> page = messageService.findAllByAnswer(optionalMessage.get(), pageId.orElse(1));
+            makePage(page, model);
+
+            List<Long> likedList = new ArrayList<>();
+            if (user != null) {
+                for (Message msg : page.getContent()) {
+                    for (Like like : msg.getLikes()) {
+                        if (like.getUser().equals(user.getUsername())) {
+                            likedList.add(like.getMessage());
+                        }
+                    }
+                }
+                for (Like like : optionalMessage.get().getLikes()) {
+                    if (like.getUser().equals(user.getUsername())) {
+                        likedList.add(like.getMessage());
+                    }
+                }
+            }
+            model.addAttribute("liked", likedList);
+
+            return "message";
+        } else {
+            return "redirect:/";
+        }
+    }
+
     private static void makePage(Page page, Model model) {
         int current = page.getNumber() + 1;
         int begin = Math.max(1, current - 5);
