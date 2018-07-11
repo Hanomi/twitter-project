@@ -15,10 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class WelcomeController {
@@ -62,18 +59,7 @@ public class WelcomeController {
         }
         makePage(page, model);
 
-
-        List<Long> likedList = new ArrayList<>();
-        if (user != null) {
-            for (Message msg : page.getContent()) {
-                for (Like like : msg.getLikes()) {
-                    if (like.getUser().equals(user.getUsername())) {
-                        likedList.add(like.getMessage());
-                    }
-                }
-            }
-        }
-        model.addAttribute("liked", likedList);
+        model.addAttribute("liked", getUserLikes(user, page.getContent()));
 
 
         return "index";
@@ -112,17 +98,7 @@ public class WelcomeController {
         }
         makePage(page, model);
 
-        List<Long> likedList = new ArrayList<>();
-        if (user != null) {
-            for (Message msg : page.getContent()) {
-                for (Like like : msg.getLikes()) {
-                    if (like.getUser().equals(user.getUsername())) {
-                        likedList.add(like.getMessage());
-                    }
-                }
-            }
-        }
-        model.addAttribute("liked", likedList);
+        model.addAttribute("liked", getUserLikes(user, page.getContent()));
 
         return "index";
     }
@@ -183,22 +159,7 @@ public class WelcomeController {
             Page<Message> page = messageService.findAllByAnswer(optionalMessage.get(), pageId.orElse(1));
             makePage(page, model);
 
-            List<Long> likedList = new ArrayList<>();
-            if (user != null) {
-                for (Message msg : page.getContent()) {
-                    for (Like like : msg.getLikes()) {
-                        if (like.getUser().equals(user.getUsername())) {
-                            likedList.add(like.getMessage());
-                        }
-                    }
-                }
-                for (Like like : optionalMessage.get().getLikes()) {
-                    if (like.getUser().equals(user.getUsername())) {
-                        likedList.add(like.getMessage());
-                    }
-                }
-            }
-            model.addAttribute("liked", likedList);
+            model.addAttribute("liked", getUserLikes(user, page.getContent(), optionalMessage.get()));
 
             return "message";
         } else {
@@ -236,30 +197,14 @@ public class WelcomeController {
             Page<Message> page = messageService.findAllByAnswer(optionalMessage.get(), pageId.orElse(1));
             makePage(page, model);
 
-            List<Long> likedList = new ArrayList<>();
-            if (user != null) {
-                for (Message msg : page.getContent()) {
-                    for (Like like : msg.getLikes()) {
-                        if (like.getUser().equals(user.getUsername())) {
-                            likedList.add(like.getMessage());
-                        }
-                    }
-                }
-                for (Like like : optionalMessage.get().getLikes()) {
-                    if (like.getUser().equals(user.getUsername())) {
-                        likedList.add(like.getMessage());
-                    }
-                }
-            }
-            model.addAttribute("liked", likedList);
-
+            model.addAttribute("liked", getUserLikes(user, page.getContent(), optionalMessage.get()));
             return "message";
         } else {
             return "redirect:/";
         }
     }
 
-    private static void makePage(Page page, Model model) {
+    private void makePage(Page page, Model model) {
         int current = page.getNumber() + 1;
         int begin = Math.max(1, current - 5);
         int end = Math.min(begin + 10, page.getTotalPages());
@@ -269,5 +214,29 @@ public class WelcomeController {
         model.addAttribute("currentIndex", current);
         model.addAttribute("active", "general");
         model.addAttribute("title", "Твиттер");
+    }
+
+    private List<Long> getUserLikes(org.springframework.security.core.userdetails.User user, List<Message> content) {
+        List<Long> result = new ArrayList<>();
+        if (user != null) {
+            for (Message msg : content) {
+                for (Like like : msg.getLikes()) {
+                    if (like.getUser().equals(user.getUsername())) {
+                        result.add(like.getMessage());
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    private List<Long> getUserLikes(org.springframework.security.core.userdetails.User user, List<Message> content, Message message) {
+        List<Long> result = getUserLikes(user, content);
+        for (Like like : message.getLikes()) {
+            if (like.getUser().equals(user.getUsername())) {
+                result.add(like.getMessage());
+            }
+        }
+        return result;
     }
 }
