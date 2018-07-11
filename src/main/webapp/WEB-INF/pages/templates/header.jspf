@@ -29,9 +29,7 @@
                     </li>
                 </ul>
                 <c:if test="${pageContext.request.userPrincipal.name != null}">
-                    <span class="navbar-text">
-                            ${pageContext.request.userPrincipal.name}
-                    </span>
+                    <a class="nav-link text-light" href="${contextPath}/profile">${pageContext.request.userPrincipal.name}</a>
                 </c:if>
             </div>
         </div>
