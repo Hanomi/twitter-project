@@ -42,8 +42,10 @@
             <div class="col">
                 <c:forEach items="${messagesList.content}" var="message">
                     <div class="blog-post">
-                        <p class="blog-post-meta"><c:if test="${message.retweet != null}"><span class="badge badge-success">Retweet</span></c:if>
-                            <fmt:formatDate pattern = "dd/MM/yyyy HH:mm:ss" value = "${message.date}" /> by ${message.user.username}
+                        <p class="blog-post-meta">
+                            <c:if test="${message.retweet != null}"><a href="${contextPath}/message/${message.retweet.id}" class="badge badge-success">Retweet</a></c:if>
+                            <c:if test="${message.answer != null}"><a href="${contextPath}/message/${message.answer.id}" class="badge badge-primary">Reply</a></c:if>
+                            <fmt:formatDate pattern = "dd/MM/yyyy HH:mm:ss" value = "${message.date}" /> by <a href="${contextPath}/user/${message.user.id}" class="text-primary">${message.user.username} </a>
                             <c:if test="${pageContext.request.userPrincipal.name == message.user.username}">
                                 <a href="${contextPath}${currentUrl}/edit/${message.id}" class="text-info"> <i class="far fa-edit"></i></a>
                             </c:if>
