@@ -8,12 +8,12 @@
         <div class="col">
             <form:form method="POST" modelAttribute="userForm" class="form-horizontal">
                 <h4>Регистрация</h4>
-                <spring:bind path="username">
+                <spring:bind path="email">
                     <div class="form-group">
-                        <form:label path="username">Username:</form:label>
-                        <form:input type="text" path="username" class="form-control" placeholder="Username"
+                        <form:label path="email">Username:</form:label>
+                        <form:input type="email" path="email" class="form-control" placeholder="Email"
                                     autofocus="true"/>
-                        <form:errors path="username" class="form-text text-danger"/>
+                        <form:errors path="email" class="form-text text-danger"/>
                     </div>
                 </spring:bind>
 
@@ -31,14 +31,6 @@
                         <form:input type="password" path="confirmPassword" class="form-control"
                                     placeholder="Confirm your password"/>
                         <form:errors path="confirmPassword" class="form-text text-danger"/>
-                    </div>
-                </spring:bind>
-
-                <spring:bind path="email">
-                    <div class="form-group">
-                        <form:label path="email">Email:</form:label>
-                        <form:input type="text" path="email" class="form-control" placeholder="Email"/>
-                        <form:errors path="email" class="form-text text-danger"/>
                     </div>
                 </spring:bind>
 

@@ -13,7 +13,9 @@
         <sec:form-login login-page="/login"
                         default-target-url="/"
                         always-use-default-target="true"
-                        authentication-failure-url="/login?error"/>
+                        authentication-failure-url="/login?error"
+                        username-parameter="email"
+                        password-parameter="password"/>
         <sec:logout logout-success-url="/login?logout" />
     </sec:http>
 

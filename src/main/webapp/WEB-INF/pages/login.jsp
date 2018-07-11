@@ -9,8 +9,8 @@
             <h4>Вход в аккаунт</h4>
             <form class="form-horizontal" method="POST" action="${contextPath}/login">
                 <div class="form-group">
-                    <label for="username">Почта:</label>
-                    <input name="username" type="email" class="form-control" id="username" placeholder="Введите адрес электронной почты">
+                    <label for="email">Почта:</label>
+                    <input name="email" type="email" class="form-control" id="email" placeholder="Введите адрес электронной почты">
                 </div>
                 <div class="form-group">
                     <label for="password">Пароль:</label>

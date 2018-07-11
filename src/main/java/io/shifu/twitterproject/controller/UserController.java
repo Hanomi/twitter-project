@@ -91,7 +91,7 @@ public class UserController {
         if (user == null) { // No token found in DB
             model.addAttribute("error", "Ссылка недействительна.");
         } else { // Token found
-            model.addAttribute("message", user.getUsername() + " успешно активирован");
+            model.addAttribute("message", "Аккаунт успешно активирован");
             userService.activationUser(user);
         }
         model.addAttribute("active", "login");

@@ -45,11 +45,11 @@
                         <p class="blog-post-meta">
                             <c:if test="${message.retweet != null}"><a href="${contextPath}/message/${message.retweet.id}" class="badge badge-success">Retweet</a></c:if>
                             <c:if test="${message.answer != null}"><a href="${contextPath}/message/${message.answer.id}" class="badge badge-primary">Reply</a></c:if>
-                            <fmt:formatDate pattern = "dd/MM/yyyy HH:mm:ss" value = "${message.date}" /> by <a href="${contextPath}/user/${message.user.id}" class="text-primary">${message.user.username} </a>
-                            <c:if test="${pageContext.request.userPrincipal.name == message.user.username}">
+                            <fmt:formatDate pattern = "dd/MM/yyyy HH:mm:ss" value = "${message.date}" /> by <a href="${contextPath}/user/${message.user.id}" class="text-primary">${message.user.email} </a>
+                            <c:if test="${pageContext.request.userPrincipal.name == message.user.email}">
                                 <a href="${contextPath}${currentUrl}/edit/${message.id}" class="text-info"> <i class="far fa-edit"></i></a>
                             </c:if>
-                            <c:if test="${pageContext.request.userPrincipal.name != message.user.username and pageContext.request.userPrincipal.name != null}">
+                            <c:if test="${pageContext.request.userPrincipal.name != message.user.email and pageContext.request.userPrincipal.name != null}">
                                 <a href="${contextPath}${currentUrl}/retweet/${message.id}" class="text-info"> <i class="far fa-arrow-alt-circle-down"></i></a>
                             </c:if>
                             <c:choose>

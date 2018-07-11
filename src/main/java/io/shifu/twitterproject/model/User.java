@@ -13,8 +13,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "username")
-    private String username;
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "password")
     private String password;
@@ -30,8 +30,8 @@ public class User {
     @OneToMany(mappedBy="user")
     private Set<Message> messages;
 
-    @Column(name = "email")
-    private String email;
+    @Column(name = "nick")
+    private String nick;
 
     @Column(name = "enabled")
     private boolean enabled;
@@ -53,12 +53,12 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -93,12 +93,12 @@ public class User {
         this.messages = messages;
     }
 
-    public String getEmail() {
-        return email;
+    public String getNick() {
+        return nick;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setNick(String nick) {
+        this.nick = nick;
     }
 
     public boolean isEnabled() {
@@ -117,19 +117,19 @@ public class User {
         this.vkId = vkId;
     }
 
-    public String getResetToken() {
-        return resetToken;
-    }
-
-    public void setResetToken(String resetToken) {
-        this.resetToken = resetToken;
-    }
-
     public String getConfirmationToken() {
         return confirmationToken;
     }
 
     public void setConfirmationToken(String confirmationToken) {
         this.confirmationToken = confirmationToken;
+    }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
     }
 }
