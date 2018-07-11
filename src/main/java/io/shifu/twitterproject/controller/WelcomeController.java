@@ -33,25 +33,22 @@ public class WelcomeController {
         this.likeService = likeService;
     }
 
-    @GetMapping({"/", "/pages/{pageId}", "/edit/{messageId}", "/pages/{pageId}/edit/{messageId}",
-            "/user/{id}", "/user/{id}/pages/{pageId}", "/user/{id}/edit/{messageId}", "/user/{id}/pages/{pageId}/edit/{messageId}"})
-    public String getView(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user, @PathVariable("id") Optional<Long> id,
-                                  @PathVariable("pageId") Optional<Integer> pageId, @PathVariable("messageId") Optional<Long> messageId) {
-        String url = id.map(user_id -> "/user/" + user_id).orElse("") + pageId.map(page_id -> "/pages/" + page_id).orElse("");
-        if (messageId.isPresent()) {
-            Optional<Message> optionalMessage = messageService.findById(messageId.get());
-            if (!optionalMessage.isPresent()) return "redirect:" + url;
-            model.addAttribute("messageForm", optionalMessage.get());
-            model.addAttribute("editMode", true);
-        } else {
-            model.addAttribute("messageForm", new Message());
-        }
+    @GetMapping({"/", "/edit/{messageId}",
+            "/pages/{pageId}",  "/pages/{pageId}/edit/{messageId}",
+            "/user/{userId}", "/user/{userId}/edit/{messageId}",
+            "/user/{userId}/pages/{pageId}", "/user/{userId}/pages/{pageId}/edit/{messageId}"})
+    public String getView(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user,
+                          @PathVariable("userId") Optional<Long> userId,
+                          @PathVariable("pageId") Optional<Integer> pageId,
+                          @PathVariable("messageId") Optional<Long> messageId) {
+        String url = userId.map(user_id -> "/user/" + user_id).orElse("") + pageId.map(page_id -> "/pages/" + page_id).orElse("");
+        if (fillForm(model, messageId)) return "redirect:" + url;
         model.addAttribute("currentUrl", url);
-        model.addAttribute("pagePath", id.map(aLong -> "/user/" + aLong + "/pages/").orElse("/pages/"));
-        model.addAttribute("userId", id);
+        model.addAttribute("pagePath", userId.map(aLong -> "/user/" + aLong + "/pages/").orElse("/pages/"));
+        model.addAttribute("userId", userId);
         Page<Message> page;
-        if (id.isPresent()) {
-            Optional<User> optionalUser = userService.findById(id.get());
+        if (userId.isPresent()) {
+            Optional<User> optionalUser = userService.findById(userId.get());
             if (!optionalUser.isPresent()) return "redirect:/";
             page = messageService.findAllByUser(optionalUser.get(), pageId.orElse(1));
         } else {
@@ -68,9 +65,10 @@ public class WelcomeController {
     @PostMapping({"/", "/pages/{pageId}", "/edit/{messageId}", "/pages/{pageId}/edit/{messageId}",
             "/user/{id}", "/user/{id}/pages/{pageId}", "/user/{id}/edit/{messageId}", "/user/{id}/pages/{pageId}/edit/{messageId}"})
     public String postView(Model model, @ModelAttribute("messageForm") Message message,
-                                  @AuthenticationPrincipal org.springframework.security.core.userdetails.User user,
-                                  @PathVariable("id") Optional<Long> id, @PathVariable("pageId") Optional<Integer> pageId,
-                                  @PathVariable("messageId") Optional<Long> messageId, BindingResult bindingResult) {
+                           @AuthenticationPrincipal org.springframework.security.core.userdetails.User user,
+                           @PathVariable("id") Optional<Long> id,
+                           @PathVariable("pageId") Optional<Integer> pageId,
+                           @PathVariable("messageId") Optional<Long> messageId, BindingResult bindingResult) {
         messageValidator.validate(message, bindingResult);
         String url = id.map(user_id -> "/user/" + user_id).orElse("") + pageId.map(page_id -> "/pages/" + page_id).orElse("");
         if (!bindingResult.hasErrors()) {
@@ -145,14 +143,7 @@ public class WelcomeController {
             model.addAttribute("currentMessage", optionalMessage.get());
             String url = "/message/" + messageId + pageId.map(page_id -> "/pages/" + page_id).orElse("");
 
-            if (editId.isPresent()) {
-                Optional<Message> editMessage = messageService.findById(editId.get());
-                if (!editMessage.isPresent()) return "redirect:" + url;
-                model.addAttribute("messageForm", editMessage.get());
-                model.addAttribute("editMode", true);
-            } else {
-                model.addAttribute("messageForm", new Message());
-            }
+            if (fillForm(model, editId)) return "redirect:" + url;
 
             model.addAttribute("currentUrl", url);
             model.addAttribute("pagePath", "/message/" + messageId + "/pages/");
@@ -174,7 +165,6 @@ public class WelcomeController {
         Optional<Message> optionalMessage = messageService.findById(messageId);
         if (optionalMessage.isPresent()) {
             messageValidator.validate(message, bindingResult);
-
 
             model.addAttribute("currentMessage", optionalMessage.get());
             String url = "/message/" + messageId + pageId.map(page_id -> "/pages/" + page_id).orElse("");
@@ -238,5 +228,17 @@ public class WelcomeController {
             }
         }
         return result;
+    }
+
+    private boolean fillForm(Model model, Optional<Long> editId) {
+        if (editId.isPresent()) {
+            Optional<Message> editMessage = messageService.findById(editId.get());
+            if (!editMessage.isPresent()) return true;
+            model.addAttribute("messageForm", editMessage.get());
+            model.addAttribute("editMode", true);
+        } else {
+            model.addAttribute("messageForm", new Message());
+        }
+        return false;
     }
 }
