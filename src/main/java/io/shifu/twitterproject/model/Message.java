@@ -28,20 +28,13 @@ public class Message {
     @OneToMany(mappedBy="message", fetch = FetchType.EAGER)
     private Set<Like> likes;
 
-    @ManyToOne(optional = true, fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
     @JoinColumn(name="retweet")
     private Message retweet;
 
-    @OneToMany(mappedBy="retweet", cascade=CascadeType.ALL)
-    private Set<Message> retweets;
-
-    @ManyToOne(optional = true, fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
     @JoinColumn(name="answer")
     private Message answer;
-
-    @OneToMany(mappedBy="answer", cascade=CascadeType.ALL)
-    private Set<Message> reply;
-
 
     public long getId() {
         return id;
@@ -91,27 +84,11 @@ public class Message {
         this.retweet = retweet;
     }
 
-    public Set<Message> getRetweets() {
-        return retweets;
-    }
-
-    public void setRetweets(Set<Message> retweets) {
-        this.retweets = retweets;
-    }
-
     public Message getAnswer() {
         return answer;
     }
 
     public void setAnswer(Message answer) {
         this.answer = answer;
-    }
-
-    public Set<Message> getReply() {
-        return reply;
-    }
-
-    public void setReply(Set<Message> reply) {
-        this.reply = reply;
     }
 }
