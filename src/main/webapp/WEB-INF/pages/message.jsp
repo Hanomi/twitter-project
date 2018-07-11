@@ -11,7 +11,7 @@
         <div class="col">
                 <div class="blog-post">
                     <p class="blog-post-meta"><c:if test="${currentMessage.retweet != null}"><span class="badge badge-success">Retweet</span></c:if>
-                        <fmt:formatDate pattern = "dd/MM/yyyy HH:mm:ss" value = "${currentMessage.date}" /> by <a href="${contextPath}/user/${currentMessage.user.id}" class="text-primary">${currentMessage.user.email} </a>
+                        <fmt:formatDate pattern = "dd/MM/yyyy HH:mm:ss" value = "${currentMessage.date}" /> by <a href="${contextPath}/user/${currentMessage.user.id}" class="text-primary">#${currentMessage.user.id} ${empty currentMessage.user.nick ? 'Anon' : currentMessage.user.nick}</a>
                         <c:if test="${pageContext.request.userPrincipal.name == currentMessage.user.email}">
                             <a href="${contextPath}${currentUrl}/edit/${currentMessage.id}" class="text-info"> <i class="far fa-edit"></i></a>
                         </c:if>
@@ -69,7 +69,7 @@
                 <c:forEach items="${messagesList.content}" var="message">
                     <div class="blog-post">
                         <p class="blog-post-meta"><c:if test="${message.retweet != null}"><span class="badge badge-success">Retweet</span></c:if>
-                            <fmt:formatDate pattern = "dd/MM/yyyy HH:mm:ss" value = "${message.date}" /> by <a href="${contextPath}/user/${message.user.id}" class="text-primary">${message.user.email} </a>
+                            <fmt:formatDate pattern = "dd/MM/yyyy HH:mm:ss" value = "${message.date}" /> by <a href="${contextPath}/user/${message.user.id}" class="text-primary">#${message.user.id} ${empty message.user.nick ? 'Anon' : message.user.nick}</a>
                             <c:if test="${pageContext.request.userPrincipal.name == message.user.email}">
                                 <a href="${contextPath}${currentUrl}/edit/${message.id}" class="text-info"> <i class="far fa-edit"></i></a>
                             </c:if>
