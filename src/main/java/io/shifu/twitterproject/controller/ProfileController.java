@@ -40,10 +40,9 @@ public class ProfileController {
                 User currentUser = userService.findByEmail(user.getUsername());
                 currentUser.setNick(nick);
                 userService.saveChange(currentUser);
-                model.addAttribute("currentNick", currentUser.getNick());
                 model.addAttribute("message", "Ник изменён.");
-
             }
+            model.addAttribute("currentNick", nick);
             model.addAttribute("active", "login");
             model.addAttribute("title", "Профиль");
             return "profile";
