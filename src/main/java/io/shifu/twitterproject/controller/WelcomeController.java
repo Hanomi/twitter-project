@@ -34,7 +34,7 @@ public class WelcomeController {
     }
 
     @GetMapping({"/", "/edit/{messageId}",
-            "/pages/{pageId}",  "/pages/{pageId}/edit/{messageId}",
+            "/pages/{pageId}", "/pages/{pageId}/edit/{messageId}",
             "/user/{userId}", "/user/{userId}/edit/{messageId}",
             "/user/{userId}/pages/{pageId}", "/user/{userId}/pages/{pageId}/edit/{messageId}"})
     public String getView(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user,
@@ -62,15 +62,17 @@ public class WelcomeController {
         return "index";
     }
 
-    @PostMapping({"/", "/pages/{pageId}", "/edit/{messageId}", "/pages/{pageId}/edit/{messageId}",
-            "/user/{id}", "/user/{id}/pages/{pageId}", "/user/{id}/edit/{messageId}", "/user/{id}/pages/{pageId}/edit/{messageId}"})
+    @PostMapping({"/", "/edit/{messageId}",
+            "/pages/{pageId}", "/pages/{pageId}/edit/{messageId}",
+            "/user/{userId}", "/user/{userId}/edit/{messageId}",
+            "/user/{userId}/pages/{pageId}", "/user/{userId}/pages/{pageId}/edit/{messageId}"})
     public String postView(Model model, @ModelAttribute("messageForm") Message message,
                            @AuthenticationPrincipal org.springframework.security.core.userdetails.User user,
-                           @PathVariable("id") Optional<Long> id,
+                           @PathVariable("userId") Optional<Long> userId,
                            @PathVariable("pageId") Optional<Integer> pageId,
                            @PathVariable("messageId") Optional<Long> messageId, BindingResult bindingResult) {
         messageValidator.validate(message, bindingResult);
-        String url = id.map(user_id -> "/user/" + user_id).orElse("") + pageId.map(page_id -> "/pages/" + page_id).orElse("");
+        String url = userId.map(user_id -> "/user/" + user_id).orElse("") + pageId.map(page_id -> "/pages/" + page_id).orElse("");
         if (!bindingResult.hasErrors()) {
             if (messageId.isPresent()) {
                 message.setUser(userService.findByEmail(user.getUsername()));
@@ -84,11 +86,11 @@ public class WelcomeController {
             }
         }
         model.addAttribute("currentUrl", url);
-        model.addAttribute("pagePath", id.map(aLong -> "/user/" + aLong + "/pages/").orElse("/pages/"));
-        model.addAttribute("userId", id);
+        model.addAttribute("pagePath", userId.map(aLong -> "/user/" + aLong + "/pages/").orElse("/pages/"));
+        model.addAttribute("userId", userId);
         Page<Message> page;
-        if (id.isPresent()) {
-            Optional<User> optionalUser = userService.findById(id.get());
+        if (userId.isPresent()) {
+            Optional<User> optionalUser = userService.findById(userId.get());
             if (!optionalUser.isPresent()) return "redirect:/";
             page = messageService.findAllByUser(optionalUser.get(), pageId.orElse(1));
         } else {
@@ -102,9 +104,12 @@ public class WelcomeController {
     }
 
     @GetMapping({"/like/{likeId}", "/pages/{pageId}/like/{likeId}",
-            "/user/{id}/like/{likeId}", "/user/{id}/pages/{pageId}/like/{likeId}"})
-    public String like(Model model, @PathVariable("likeId") Long likeId, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user, @PathVariable("id") Optional<Long> id, @PathVariable("pageId") Optional<Integer> pageId) {
-        String url = id.map(user_id -> "/user/" + user_id).orElse("") + pageId.map(page_id -> "/pages/" + page_id).orElse("");
+            "/user/{userId}/like/{likeId}", "/user/{userId}/pages/{pageId}/like/{likeId}"})
+    public String like(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user,
+                       @PathVariable("likeId") Long likeId,
+                       @PathVariable("userId") Optional<Long> userId,
+                       @PathVariable("pageId") Optional<Integer> pageId) {
+        String url = userId.map(user_id -> "/user/" + user_id).orElse("") + pageId.map(page_id -> "/pages/" + page_id).orElse("");
         if (user != null && !user.getUsername().equals(messageService.findById(likeId).get().getUser().getEmail())) {
             if (likeService.liked(likeId, user.getUsername())) {
                 likeService.delete(likeId, user.getUsername());
@@ -119,9 +124,12 @@ public class WelcomeController {
     }
 
     @GetMapping({"/retweet/{retweetId}", "/pages/{pageId}/retweet/{retweetId}",
-            "/user/{id}/retweet/{retweetId}", "/user/{id}/pages/{pageId}/retweet/{retweetId}"})
-    public String retweet(Model model, @PathVariable("retweetId") Long retweetId, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user, @PathVariable("id") Optional<Long> id, @PathVariable("pageId") Optional<Integer> pageId) {
-        String url = id.map(user_id -> "/user/" + user_id).orElse("") + pageId.map(page_id -> "/pages/" + page_id).orElse("");
+            "/user/{userId}/retweet/{retweetId}", "/user/{userId}/pages/{pageId}/retweet/{retweetId}"})
+    public String retweet(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user,
+                          @PathVariable("retweetId") Long retweetId,
+                          @PathVariable("userId") Optional<Long> userId,
+                          @PathVariable("pageId") Optional<Integer> pageId) {
+        String url = userId.map(user_id -> "/user/" + user_id).orElse("") + pageId.map(page_id -> "/pages/" + page_id).orElse("");
         if (user != null && !user.getUsername().equals(messageService.findById(retweetId).get().getUser().getEmail())) {
             Message message = new Message();
             Message oldMessage = messageService.findById(retweetId).get();
@@ -134,10 +142,12 @@ public class WelcomeController {
         return "redirect:" + (url.isEmpty() ? "/" : url);
     }
 
-    @GetMapping({"/message/{messageId}", "/message/{messageId}/pages/{pageId}",
-            "/message/{messageId}/edit/{editId}", "/message/{messageId}/pages/{pageId}/edit/{editId}"}) //
-    public String getMessage(Model model, @PathVariable("messageId") Long messageId, @PathVariable("pageId") Optional<Integer> pageId,
-                             @AuthenticationPrincipal org.springframework.security.core.userdetails.User user, @PathVariable("editId") Optional<Long> editId) {
+    @GetMapping({"/message/{messageId}", "/message/{messageId}/edit/{editId}",
+            "/message/{messageId}/pages/{pageId}", "/message/{messageId}/pages/{pageId}/edit/{editId}"})
+    public String getMessage(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user,
+                             @PathVariable("messageId") Long messageId,
+                             @PathVariable("pageId") Optional<Integer> pageId,
+                             @PathVariable("editId") Optional<Long> editId) {
         Optional<Message> optionalMessage = messageService.findById(messageId);
         if (optionalMessage.isPresent()) {
             model.addAttribute("currentMessage", optionalMessage.get());
@@ -158,10 +168,13 @@ public class WelcomeController {
         }
     }
 
-    @PostMapping({"/message/{messageId}", "/message/{messageId}/pages/{pageId}",
-            "/message/{messageId}/edit/{editId}", "/message/{messageId}/pages/{pageId}/edit/{editId}"}) //
-    public String postMessage(Model model, @ModelAttribute("messageForm") Message message, @PathVariable("messageId") Long messageId, @PathVariable("pageId") Optional<Integer> pageId,
-                             @AuthenticationPrincipal org.springframework.security.core.userdetails.User user, @PathVariable("editId") Optional<Long> editId, BindingResult bindingResult) {
+    @PostMapping({"/message/{messageId}", "/message/{messageId}/edit/{editId}",
+            "/message/{messageId}/pages/{pageId}", "/message/{messageId}/pages/{pageId}/edit/{editId}"})
+    public String postMessage(Model model, @ModelAttribute("messageForm") Message message,
+                              @AuthenticationPrincipal org.springframework.security.core.userdetails.User user,
+                              @PathVariable("messageId") Long messageId,
+                              @PathVariable("pageId") Optional<Integer> pageId,
+                              @PathVariable("editId") Optional<Long> editId, BindingResult bindingResult) {
         Optional<Message> optionalMessage = messageService.findById(messageId);
         if (optionalMessage.isPresent()) {
             messageValidator.validate(message, bindingResult);
@@ -222,9 +235,11 @@ public class WelcomeController {
 
     private List<Long> getUserLikes(org.springframework.security.core.userdetails.User user, List<Message> content, Message message) {
         List<Long> result = getUserLikes(user, content);
-        for (Like like : message.getLikes()) {
-            if (like.getUser().equals(user.getUsername())) {
-                result.add(like.getMessage());
+        if (user != null) {
+            for (Like like : message.getLikes()) {
+                if (like.getUser().equals(user.getUsername())) {
+                    result.add(like.getMessage());
+                }
             }
         }
         return result;
