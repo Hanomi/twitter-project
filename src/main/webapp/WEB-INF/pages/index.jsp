@@ -46,18 +46,19 @@
                             <c:if test="${message.retweet != null}"><a href="${contextPath}/message/${message.retweet.id}" class="badge badge-success">Retweet</a></c:if>
                             <c:if test="${message.answer != null}"><a href="${contextPath}/message/${message.answer.id}" class="badge badge-primary">Reply</a></c:if>
                             <fmt:formatDate pattern = "dd/MM/yyyy HH:mm:ss" value = "${message.date}" /> by <a href="${contextPath}/user/${message.user.id}" class="text-primary">#${message.user.id} ${empty message.user.nick ? 'Anon' : message.user.nick}</a>
+                            <a class="text-secondary" href="${contextPath}/message/${message.id}"> <i class="far fa-comment"></i></a>
                             <c:if test="${pageContext.request.userPrincipal.name == message.user.email}">
-                                <a href="${contextPath}${currentUrl}/edit/${message.id}" class="text-info"> <i class="far fa-edit"></i></a>
+                                <a href="${contextPath}${currentUrl}/edit/${message.id}" class="text-secondary"> <i class="far fa-edit"></i></a>
                             </c:if>
                             <c:if test="${pageContext.request.userPrincipal.name != message.user.email and pageContext.request.userPrincipal.name != null}">
-                                <a href="${contextPath}${currentUrl}/retweet/${message.id}" class="text-info"> <i class="far fa-arrow-alt-circle-down"></i></a>
+                                <a href="${contextPath}${currentUrl}/retweet/${message.id}" class="text-secondary"> <i class="far fa-arrow-alt-circle-down"></i></a>
                             </c:if>
                             <c:choose>
                                 <c:when test="${liked.contains(message.id)}">
                                     <a href="${contextPath}${currentUrl}/like/${message.id}" class="text-danger"> <i class="far fa-heart"></i><span class="badge badge-light">${message.likes.size()}</span></a>
                                 </c:when>
                                 <c:otherwise>
-                                    <a href="${contextPath}${currentUrl}/like/${message.id}" class="text-muted"> <i class="far fa-heart"></i><span class="badge badge-light">${message.likes.size()}</span></a>
+                                    <a href="${contextPath}${currentUrl}/like/${message.id}" class="text-secondary"> <i class="far fa-heart"></i><span class="badge badge-light">${message.likes.size()}</span></a>
                                 </c:otherwise>
                             </c:choose>
                         </p>
