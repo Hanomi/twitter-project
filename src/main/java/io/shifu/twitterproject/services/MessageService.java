@@ -13,9 +13,11 @@ public interface MessageService {
 
     void save(Message message);
 
+    void saveReply(Message message, Message parent);
+
     Page<Message> findAll(Integer pageNumber);
 
     Page<Message> findAllByUser(User user, Integer pageNumber);
 
-    Page<Message> findAllByAnswer(Message message, Integer pageNumber);
+    Page<Message> findAllByThread(Long threadId, Integer pageNumber);
 }

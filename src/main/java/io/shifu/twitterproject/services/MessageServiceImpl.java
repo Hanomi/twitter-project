@@ -9,7 +9,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,8 +33,20 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public void saveReply(Message message, Message parent) {
+
+        message.setLvl(parent.getLvl()+1);
+        message.setLft(parent.getRgt());
+        message.setRgt(parent.getRgt()+1);
+
+        messageRepository.updateKeys(parent.getThread(), parent.getRgt());
+
+        messageRepository.save(message);
+    }
+
+    @Override
     public Page<Message> findAll(Integer pageNumber) {
-        return messageRepository.findAllByAnswerIsNull(PageRequest.of(pageNumber-1, PAGE_SIZE, Sort.Direction.DESC, "date"));
+        return messageRepository.findAllByThreadIsNull(PageRequest.of(pageNumber-1, PAGE_SIZE, Sort.Direction.DESC, "date"));
     }
 
     @Override
@@ -44,7 +55,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Page<Message> findAllByAnswer(Message message, Integer pageNumber) {
-        return messageRepository.findAllByAnswer(message, PageRequest.of(pageNumber-1, PAGE_SIZE, Sort.Direction.DESC, "date"));
+    public Page<Message> findAllByThread(Long threadId, Integer pageNumber) {
+        return messageRepository.findAllByThread(threadId, PageRequest.of(pageNumber-1, PAGE_SIZE, Sort.Direction.DESC, "date"));
     }
 }

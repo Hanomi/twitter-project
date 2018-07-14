@@ -136,7 +136,7 @@ public class WelcomeController {
             message.setText(oldMessage.getText());
             message.setDate(new Date());
             message.setUser(userService.findByEmail(user.getUsername()));
-            message.setRetweet(oldMessage);
+            message.setRetweet(oldMessage.getId());
             messageService.save(message);
         }
         return "redirect:" + (url.isEmpty() ? "/" : url);
@@ -157,7 +157,7 @@ public class WelcomeController {
 
             model.addAttribute("currentUrl", url);
             model.addAttribute("pagePath", "/message/" + messageId + "/pages/");
-            Page<Message> page = messageService.findAllByAnswer(optionalMessage.get(), pageId.orElse(1));
+            Page<Message> page = messageService.findAllByThread(optionalMessage.get().getId(), pageId.orElse(1));
             makePage(page, model);
 
             model.addAttribute("liked", getUserLikes(user, page.getContent(), optionalMessage.get()));
@@ -177,27 +177,41 @@ public class WelcomeController {
                               @PathVariable("editId") Optional<Long> editId, BindingResult bindingResult) {
         Optional<Message> optionalMessage = messageService.findById(messageId);
         if (optionalMessage.isPresent()) {
+            Message thread = optionalMessage.get();
             messageValidator.validate(message, bindingResult);
 
-            model.addAttribute("currentMessage", optionalMessage.get());
+            model.addAttribute("currentMessage", thread);
             String url = "/message/" + messageId + pageId.map(page_id -> "/pages/" + page_id).orElse("");
 
             if (!bindingResult.hasErrors()) {
                 message.setUser(userService.findByEmail(user.getUsername()));
-                message.setAnswer(optionalMessage.get());
+
+                if (thread.getThread() == null) {
+                    message.setThread(thread.getId());
+                    thread.setThread(thread.getId());
+                    thread.setLvl(0l);
+                    thread.setLft(1l);
+                    thread.setRgt(2l);
+                    messageService.save(thread);
+                } else {
+                    message.setThread(thread.getThread());
+                }
+                message.setParentId(thread.getId());
+
+
                 if (editId.isPresent()) {
                     messageService.save(message);
                     return "redirect:" + url;
                 } else {
                     message.setDate(new Date());
-                    messageService.save(message);
+                    messageService.saveReply(message, thread);
                     model.addAttribute("messageForm", new Message());
                 }
             }
 
             model.addAttribute("currentUrl", url);
             model.addAttribute("pagePath", "/message/" + messageId + "/pages/");
-            Page<Message> page = messageService.findAllByAnswer(optionalMessage.get(), pageId.orElse(1));
+            Page<Message> page = messageService.findAllByThread(optionalMessage.get().getId(), pageId.orElse(1));
             makePage(page, model);
 
             model.addAttribute("liked", getUserLikes(user, page.getContent(), optionalMessage.get()));

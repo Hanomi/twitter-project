@@ -28,13 +28,23 @@ public class Message {
     @OneToMany(mappedBy="message", fetch = FetchType.EAGER)
     private Set<Like> likes;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
-    @JoinColumn(name="retweet")
-    private Message retweet;
+    @Column(name = "retweet")
+    private Long retweet;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
-    @JoinColumn(name="answer")
-    private Message answer;
+    @Column(name = "thread")
+    private Long thread;
+
+    @Column(name = "parent_id")
+    private Long parentId;
+
+    @Column(name = "lft")
+    private Long lft;
+
+    @Column(name = "rgt")
+    private Long rgt;
+
+    @Column(name = "lvl")
+    private Long lvl;
 
     public long getId() {
         return id;
@@ -76,19 +86,51 @@ public class Message {
         this.likes = likes;
     }
 
-    public Message getRetweet() {
+    public Long getRetweet() {
         return retweet;
     }
 
-    public void setRetweet(Message retweet) {
+    public void setRetweet(Long retweet) {
         this.retweet = retweet;
     }
 
-    public Message getAnswer() {
-        return answer;
+    public Long getThread() {
+        return thread;
     }
 
-    public void setAnswer(Message answer) {
-        this.answer = answer;
+    public void setThread(Long thread) {
+        this.thread = thread;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public Long getLft() {
+        return lft;
+    }
+
+    public void setLft(Long lft) {
+        this.lft = lft;
+    }
+
+    public Long getRgt() {
+        return rgt;
+    }
+
+    public void setRgt(Long rgt) {
+        this.rgt = rgt;
+    }
+
+    public Long getLvl() {
+        return lvl;
+    }
+
+    public void setLvl(Long lvl) {
+        this.lvl = lvl;
     }
 }
