@@ -19,5 +19,5 @@ public interface MessageService {
 
     Page<Message> findAllByUser(User user, Integer pageNumber);
 
-    Page<Message> findAllByThread(Long threadId, Integer pageNumber);
+    List<Message> findAllByThread(Message message);
 }

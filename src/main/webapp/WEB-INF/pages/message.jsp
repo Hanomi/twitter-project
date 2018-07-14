@@ -63,10 +63,10 @@
             </div>
         </div>
     </c:if>
-    <c:if test="${!empty messagesList.content}">
+    <c:if test="${!empty messagesList}">
         <div class="row">
             <div class="col">
-                <c:forEach items="${messagesList.content}" var="message">
+                <c:forEach items="${messagesList}" var="message">
                     <div class="blog-post">
                         <p class="blog-post-meta"><c:if test="${message.retweet != null}"><span class="badge badge-success">Retweet</span></c:if>
                             <fmt:formatDate pattern = "dd/MM/yyyy HH:mm:ss" value = "${message.date}" /> by <a href="${contextPath}/user/${message.user.id}" class="text-primary">#${message.user.id} ${empty message.user.nick ? 'Anon' : message.user.nick}</a>
@@ -91,14 +91,14 @@
             </div>
         </div>
 
-        <c:url var="firstUrl" value="${pagePath}1"/>
+<%--        <c:url var="firstUrl" value="${pagePath}1"/>
         <c:url var="page" value="${pagePath}"/>
         <c:url var="lastUrl" value="${pagePath}${messagesList.totalPages}"/>
         <c:url var="prevUrl" value="${pagePath}${currentIndex - 1}"/>
         <c:url var="nextUrl" value="${pagePath}${currentIndex + 1}"/>
         <c:if test="${messagesList.totalPages != 1}">
             <%@include file="templates/pagination.jspf" %>
-        </c:if>
+        </c:if>--%>
     </c:if>
 </main>
 

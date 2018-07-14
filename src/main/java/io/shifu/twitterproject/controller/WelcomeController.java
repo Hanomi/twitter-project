@@ -157,11 +157,20 @@ public class WelcomeController {
 
             model.addAttribute("currentUrl", url);
             model.addAttribute("pagePath", "/message/" + messageId + "/pages/");
-            Page<Message> page = messageService.findAllByThread(optionalMessage.get().getId(), pageId.orElse(1));
-            makePage(page, model);
+            //Page<Message> page = messageService.findAllByThread(optionalMessage.get().getId(), pageId.orElse(1));
+            List<Message> page = messageService.findAllByThread(optionalMessage.get());
+            //    makePage(page, model);
+            int current = 1;
+            int begin = Math.max(1, current - 5);
+            int end = Math.min(begin + 10, 1);
+            model.addAttribute("messagesList", page);
+            model.addAttribute("beginIndex", begin);
+            model.addAttribute("endIndex", end);
+            model.addAttribute("currentIndex", current);
+            model.addAttribute("active", "general");
+            model.addAttribute("title", "Твиттер");
 
-            model.addAttribute("liked", getUserLikes(user, page.getContent(), optionalMessage.get()));
-
+            model.addAttribute("liked", getUserLikes(user, page, optionalMessage.get()));
             return "message";
         } else {
             return "redirect:/";
@@ -211,10 +220,20 @@ public class WelcomeController {
 
             model.addAttribute("currentUrl", url);
             model.addAttribute("pagePath", "/message/" + messageId + "/pages/");
-            Page<Message> page = messageService.findAllByThread(optionalMessage.get().getId(), pageId.orElse(1));
-            makePage(page, model);
+            //Page<Message> page = messageService.findAllByThread(optionalMessage.get().getId(), pageId.orElse(1));
+            List<Message> page = messageService.findAllByThread(thread);
+        //    makePage(page, model);
+            int current = 1;
+            int begin = Math.max(1, current - 5);
+            int end = Math.min(begin + 10, 1);
+            model.addAttribute("messagesList", page);
+            model.addAttribute("beginIndex", begin);
+            model.addAttribute("endIndex", end);
+            model.addAttribute("currentIndex", current);
+            model.addAttribute("active", "general");
+            model.addAttribute("title", "Твиттер");
 
-            model.addAttribute("liked", getUserLikes(user, page.getContent(), optionalMessage.get()));
+            model.addAttribute("liked", getUserLikes(user, page, optionalMessage.get()));
             return "message";
         } else {
             return "redirect:/";

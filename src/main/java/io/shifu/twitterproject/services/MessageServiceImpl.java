@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -55,7 +56,8 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Page<Message> findAllByThread(Long threadId, Integer pageNumber) {
-        return messageRepository.findAllByThread(threadId, PageRequest.of(pageNumber-1, PAGE_SIZE, Sort.Direction.DESC, "date"));
+    public List<Message> findAllByThread(Message message) {
+        //return messageRepository.findAllByThread(threadId, PageRequest.of(pageNumber-1, PAGE_SIZE, Sort.Direction.DESC, "date"));
+        return messageRepository.findByThread(message.getThread(), message.getLft(), message.getRgt());
     }
 }
