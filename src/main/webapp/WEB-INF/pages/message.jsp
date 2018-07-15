@@ -9,7 +9,7 @@
 <main role="main" class="container">
     <div class="row">
         <div class="col">
-                <div class="blog-post">
+                <div class="blog-post text-info">
                     <p class="blog-post-meta"><c:if test="${currentMessage.retweet != null}"><span class="badge badge-success">Retweet</span></c:if>
                         <fmt:formatDate pattern = "dd/MM/yyyy HH:mm:ss" value = "${currentMessage.date}" /> by <a href="${contextPath}/user/${currentMessage.user.id}" class="text-primary">#${currentMessage.user.id} ${empty currentMessage.user.nick ? 'Anon' : currentMessage.user.nick}</a>
                         <c:if test="${pageContext.request.userPrincipal.name == currentMessage.user.email}">
