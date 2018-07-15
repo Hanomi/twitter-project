@@ -151,10 +151,6 @@ public class WelcomeController {
         Optional<Message> optionalMessage = messageService.findById(messageId);
         if (optionalMessage.isPresent()) {
             model.addAttribute("currentMessage", optionalMessage.get());
-            if (optionalMessage.get().getParentId() != null) {
-                Optional<Message> parent = messageService.findById(optionalMessage.get().getParentId());
-                parent.ifPresent(message -> model.addAttribute("parentMessage", message));
-            }
             String url = "/message/" + messageId + pageId.map(page_id -> "/pages/" + page_id).orElse("");
 
             if (fillForm(model, editId)) return "redirect:" + url;
@@ -164,7 +160,14 @@ public class WelcomeController {
             Page<Message> page = messageService.findAllByThread(optionalMessage.get(), pageId.orElse(1));
             makePage(page, model);
 
-            model.addAttribute("liked", getUserLikes(user, page.getContent(), optionalMessage.get()));
+            List<Long> userLikes = getUserLikes(user, page.getContent());
+            getUserLikes(user, userLikes, optionalMessage.get());
+            if (optionalMessage.get().getParentId() != null) {
+                Optional<Message> parent = messageService.findById(optionalMessage.get().getParentId());
+                parent.ifPresent(message -> model.addAttribute("parentMessage", message));
+                getUserLikes(user, userLikes, parent.get());
+            }
+            model.addAttribute("liked", userLikes);
             return "message";
         } else {
             return "redirect:/";
@@ -181,10 +184,6 @@ public class WelcomeController {
         Optional<Message> optionalMessage = messageService.findById(messageId);
         if (optionalMessage.isPresent()) {
             Message thread = optionalMessage.get();
-            if (thread.getParentId() != null) {
-                Optional<Message> parent = messageService.findById(thread.getParentId());
-                parent.ifPresent(message1 -> model.addAttribute("parentMessage", message1));
-            }
             messageValidator.validate(message, bindingResult);
 
             model.addAttribute("currentMessage", thread);
@@ -232,7 +231,14 @@ public class WelcomeController {
             Page<Message> page = messageService.findAllByThread(messageService.findById(messageId).get(), pageId.orElse(1));
             makePage(page, model);
 
-            model.addAttribute("liked", getUserLikes(user, page.getContent(), optionalMessage.get()));
+            List<Long> userLikes = getUserLikes(user, page.getContent());
+            getUserLikes(user, userLikes, optionalMessage.get());
+            if (thread.getParentId() != null) {
+                Optional<Message> parent = messageService.findById(thread.getParentId());
+                parent.ifPresent(message1 -> model.addAttribute("parentMessage", message1));
+                getUserLikes(user, userLikes, parent.get());
+            }
+            model.addAttribute("liked", userLikes);
             return "message";
         } else {
             return "redirect:/";
@@ -265,16 +271,15 @@ public class WelcomeController {
         return result;
     }
 
-    private List<Long> getUserLikes(org.springframework.security.core.userdetails.User user, List<Message> content, Message message) {
-        List<Long> result = getUserLikes(user, content);
+    private List<Long> getUserLikes(org.springframework.security.core.userdetails.User user, List<Long> likes, Message message) {
         if (user != null) {
             for (Like like : message.getLikes()) {
                 if (like.getUser().equals(user.getUsername())) {
-                    result.add(like.getMessage());
+                    likes.add(like.getMessage());
                 }
             }
         }
-        return result;
+        return likes;
     }
 
     private boolean fillForm(Model model, Optional<Long> editId) {
