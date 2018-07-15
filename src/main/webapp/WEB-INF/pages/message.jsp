@@ -7,6 +7,32 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
 <main role="main" class="container">
+    <c:if test="${parentMessage != null}">
+        <div class="row">
+            <div class="col">
+                <div class="blog-post">
+                    <p class="blog-post-meta"><c:if test="${parentMessage.retweet != null}"><span class="badge badge-success">Retweet</span></c:if>
+                        <fmt:formatDate pattern = "dd/MM/yyyy HH:mm:ss" value = "${parentMessage.date}" /> by <a href="${contextPath}/user/${parentMessage.user.id}" class="text-primary">#${parentMessage.user.id} ${empty parentMessage.user.nick ? 'Anon' : parentMessage.user.nick}</a>
+                        <c:if test="${pageContext.request.userPrincipal.name == parentMessage.user.email}">
+                            <a href="${contextPath}${currentUrl}/edit/${parentMessage.id}" class="text-info"> <i class="far fa-edit"></i></a>
+                        </c:if>
+                        <c:if test="${pageContext.request.userPrincipal.name != parentMessage.user.email and pageContext.request.userPrincipal.name != null}">
+                            <a href="${contextPath}${currentUrl}/retweet/${parentMessage.id}" class="text-info"> <i class="far fa-arrow-alt-circle-down"></i></a>
+                        </c:if>
+                        <c:choose>
+                            <c:when test="${liked.contains(parentMessage.id)}">
+                                <a href="${contextPath}${currentUrl}/like/${parentMessage.id}" class="text-danger"> <i class="far fa-heart"></i><span class="badge badge-light">${parentMessage.likes.size()}</span></a>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="${contextPath}${currentUrl}/like/${parentMessage.id}" class="text-muted"> <i class="far fa-heart"></i><span class="badge badge-light">${parentMessage.likes.size()}</span></a>
+                            </c:otherwise>
+                        </c:choose>
+                    </p>
+                    <p class="blog-post-text">${parentMessage.text}</p>
+                </div>
+            </div>
+        </div>
+    </c:if>
     <div class="row">
         <div class="col">
                 <div class="blog-post text-info">

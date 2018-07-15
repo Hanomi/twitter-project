@@ -151,6 +151,10 @@ public class WelcomeController {
         Optional<Message> optionalMessage = messageService.findById(messageId);
         if (optionalMessage.isPresent()) {
             model.addAttribute("currentMessage", optionalMessage.get());
+            if (optionalMessage.get().getParentId() != null) {
+                Optional<Message> parent = messageService.findById(optionalMessage.get().getParentId());
+                parent.ifPresent(message -> model.addAttribute("parentMessage", message));
+            }
             String url = "/message/" + messageId + pageId.map(page_id -> "/pages/" + page_id).orElse("");
 
             if (fillForm(model, editId)) return "redirect:" + url;
@@ -177,6 +181,10 @@ public class WelcomeController {
         Optional<Message> optionalMessage = messageService.findById(messageId);
         if (optionalMessage.isPresent()) {
             Message thread = optionalMessage.get();
+            if (thread.getParentId() != null) {
+                Optional<Message> parent = messageService.findById(thread.getParentId());
+                parent.ifPresent(message1 -> model.addAttribute("parentMessage", message1));
+            }
             messageValidator.validate(message, bindingResult);
 
             model.addAttribute("currentMessage", thread);
