@@ -157,20 +157,10 @@ public class WelcomeController {
 
             model.addAttribute("currentUrl", url);
             model.addAttribute("pagePath", "/message/" + messageId + "/pages/");
-            //Page<Message> page = messageService.findAllByThread(optionalMessage.get().getId(), pageId.orElse(1));
-            List<Message> page = messageService.findAllByThread(optionalMessage.get());
-            //    makePage(page, model);
-            int current = 1;
-            int begin = Math.max(1, current - 5);
-            int end = Math.min(begin + 10, 1);
-            model.addAttribute("messagesList", page);
-            model.addAttribute("beginIndex", begin);
-            model.addAttribute("endIndex", end);
-            model.addAttribute("currentIndex", current);
-            model.addAttribute("active", "general");
-            model.addAttribute("title", "Твиттер");
+            Page<Message> page = messageService.findAllByThread(optionalMessage.get(), pageId.orElse(1));
+            makePage(page, model);
 
-            model.addAttribute("liked", getUserLikes(user, page, optionalMessage.get()));
+            model.addAttribute("liked", getUserLikes(user, page.getContent(), optionalMessage.get()));
             return "message";
         } else {
             return "redirect:/";
@@ -209,6 +199,12 @@ public class WelcomeController {
 
 
                 if (editId.isPresent()) {
+                    Optional<Message> byId = messageService.findById(message.getId());
+                    if (byId.isPresent()) {
+                        message.setLvl(byId.get().getLvl());
+                        message.setLft(byId.get().getLft());
+                        message.setRgt(byId.get().getRgt());
+                    }
                     messageService.save(message);
                     return "redirect:" + url;
                 } else {
@@ -220,20 +216,10 @@ public class WelcomeController {
 
             model.addAttribute("currentUrl", url);
             model.addAttribute("pagePath", "/message/" + messageId + "/pages/");
-            //Page<Message> page = messageService.findAllByThread(optionalMessage.get().getId(), pageId.orElse(1));
-            List<Message> page = messageService.findAllByThread(thread);
-        //    makePage(page, model);
-            int current = 1;
-            int begin = Math.max(1, current - 5);
-            int end = Math.min(begin + 10, 1);
-            model.addAttribute("messagesList", page);
-            model.addAttribute("beginIndex", begin);
-            model.addAttribute("endIndex", end);
-            model.addAttribute("currentIndex", current);
-            model.addAttribute("active", "general");
-            model.addAttribute("title", "Твиттер");
+            Page<Message> page = messageService.findAllByThread(messageService.findById(messageId).get(), pageId.orElse(1));
+            makePage(page, model);
 
-            model.addAttribute("liked", getUserLikes(user, page, optionalMessage.get()));
+            model.addAttribute("liked", getUserLikes(user, page.getContent(), optionalMessage.get()));
             return "message";
         } else {
             return "redirect:/";

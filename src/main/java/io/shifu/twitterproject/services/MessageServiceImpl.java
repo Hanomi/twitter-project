@@ -47,7 +47,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Page<Message> findAll(Integer pageNumber) {
-        return messageRepository.findAllByThreadIsNull(PageRequest.of(pageNumber-1, PAGE_SIZE, Sort.Direction.DESC, "date"));
+        return messageRepository.findAllByParentIdIsNull(PageRequest.of(pageNumber-1, PAGE_SIZE, Sort.Direction.DESC, "date"));
     }
 
     @Override
@@ -56,8 +56,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> findAllByThread(Message message) {
-        //return messageRepository.findAllByThread(threadId, PageRequest.of(pageNumber-1, PAGE_SIZE, Sort.Direction.DESC, "date"));
-        return messageRepository.findByThread(message.getThread(), message.getLft(), message.getRgt());
+    public Page<Message> findAllByThread(Message message, Integer pageNumber) {
+        return messageRepository.findByThread(message.getThread(), message.getLft(), message.getRgt(), PageRequest.of(pageNumber-1, PAGE_SIZE));
     }
 }

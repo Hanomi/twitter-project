@@ -29,7 +29,7 @@
                     </p>
                     <p>${currentMessage.text}</p>
                 </div>
-            <h2 class="blog-post-title">Ответы</h2>
+            <h3 class="blog-post-title">Ответы</h3>
         </div>
     </div>
     <c:if test="${pageContext.request.userPrincipal.name != null}">
@@ -63,10 +63,10 @@
             </div>
         </div>
     </c:if>
-    <c:if test="${!empty messagesList}">
+    <c:if test="${!empty messagesList.getContent()}">
         <div class="row">
             <div class="col">
-                <c:forEach items="${messagesList}" var="message">
+                <c:forEach items="${messagesList.getContent()}" var="message">
                     <div class="blog-post">
                         <p class="blog-post-meta"><c:if test="${message.retweet != null}"><span class="badge badge-success">Retweet</span></c:if>
                             <fmt:formatDate pattern = "dd/MM/yyyy HH:mm:ss" value = "${message.date}" /> by <a href="${contextPath}/user/${message.user.id}" class="text-primary">#${message.user.id} ${empty message.user.nick ? 'Anon' : message.user.nick}</a>
@@ -91,14 +91,14 @@
             </div>
         </div>
 
-<%--        <c:url var="firstUrl" value="${pagePath}1"/>
+        <c:url var="firstUrl" value="${pagePath}1"/>
         <c:url var="page" value="${pagePath}"/>
         <c:url var="lastUrl" value="${pagePath}${messagesList.totalPages}"/>
         <c:url var="prevUrl" value="${pagePath}${currentIndex - 1}"/>
         <c:url var="nextUrl" value="${pagePath}${currentIndex + 1}"/>
         <c:if test="${messagesList.totalPages != 1}">
             <%@include file="templates/pagination.jspf" %>
-        </c:if>--%>
+        </c:if>
     </c:if>
 </main>
 

@@ -9,19 +9,16 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
-    Page<Message> findAllByThreadIsNull(Pageable pageable);
+    Page<Message> findAllByParentIdIsNull(Pageable pageable);
 
     Page<Message> findAllByUser(User user, Pageable pageable);
 
-    //Page<Message> findAllByThread(Long thread, Pageable pageable);
-
-    //SELECT id, name, level FROM my_tree WHERE left_key >= $left_key AND right_key <= $right_key ORDER BY left_key
-    @Query(nativeQuery = true, value = "SELECT * FROM messages WHERE thread = ?1 AND lft > ?2 AND rgt < ?3 ORDER BY lft")
-    List<Message> findByThread(Long thread, Long left, Long right);
+    @Query(value = "SELECT * FROM messages WHERE thread = ?1 AND lft > ?2 AND rgt < ?3 ORDER BY lft",
+            countQuery = "SELECT COUNT(*) FROM messages WHERE thread = ?1 AND lft > ?2 AND rgt < ?3",
+            nativeQuery = true)
+    Page<Message> findByThread(Long thread, Long left, Long right, Pageable pageable);
 
     @Modifying
     @Transactional
