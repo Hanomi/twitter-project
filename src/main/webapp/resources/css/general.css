@@ -43,14 +43,19 @@ code {
  * Blog posts
  */
 .blog-post {
-    margin-bottom: 1rem;
+    margin-bottom: .4rem;
     border-bottom: 1px dotted black;
 }
+
 .blog-post-title {
-    margin-bottom: .25rem;
+    margin-bottom: .2rem;
     font-size: 2rem;
 }
 .blog-post-meta {
-    margin-bottom: .6rem;
+    margin-bottom: 0;
     color: #999;
+}
+
+.blog-post-text {
+    margin-bottom: .4rem;
 }

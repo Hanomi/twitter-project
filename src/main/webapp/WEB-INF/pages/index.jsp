@@ -38,13 +38,13 @@
         </div>
     </c:if>
     <c:if test="${!empty messagesList.content}">
-        <div class="row">
-            <div class="col">
-                <c:forEach items="${messagesList.content}" var="message">
+        <c:forEach items="${messagesList.content}" var="message">
+            <div class="row">
+                <div class="col">
                     <div class="blog-post">
                         <p class="blog-post-meta">
                             <c:if test="${message.retweet != null}"><a href="${contextPath}/message/${message.retweet}" class="badge badge-success">Retweet</a></c:if>
-                            <c:if test="${message.thread != null}"><a href="${contextPath}/message/${message.thread}" class="badge badge-primary">Reply</a></c:if>
+                            <c:if test="${message.parentId != null}"><a href="${contextPath}/message/${message.parentId}" class="badge badge-primary">Reply</a></c:if>
                             <fmt:formatDate pattern = "dd/MM/yyyy HH:mm:ss" value = "${message.date}" /> by <a href="${contextPath}/user/${message.user.id}" class="text-primary">#${message.user.id} ${empty message.user.nick ? 'Anon' : message.user.nick}</a>
                             <a class="text-secondary" href="${contextPath}/message/${message.id}"> <i class="far fa-comment"></i></a>
                             <c:if test="${pageContext.request.userPrincipal.name == message.user.email}">
@@ -62,11 +62,11 @@
                                 </c:otherwise>
                             </c:choose>
                         </p>
-                        <p>${message.text}</p>
+                        <p class="blog-post-text">${message.text}</p>
                     </div>
-                </c:forEach>
+                </div>
             </div>
-        </div>
+        </c:forEach>
 
         <c:url var="firstUrl" value="${pagePath}1"/>
         <c:url var="page" value="${pagePath}"/>

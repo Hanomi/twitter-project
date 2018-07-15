@@ -185,7 +185,9 @@ public class WelcomeController {
             if (!bindingResult.hasErrors()) {
                 message.setUser(userService.findByEmail(user.getUsername()));
 
+                //todo привести в нормальный вид
                 if (thread.getThread() == null) {
+                    // задаём настройки новому топику с ответами
                     message.setThread(thread.getId());
                     thread.setThread(thread.getId());
                     thread.setLvl(0l);
@@ -195,10 +197,12 @@ public class WelcomeController {
                 } else {
                     message.setThread(thread.getThread());
                 }
+                // указываем сообщение, как ответ
                 message.setParentId(thread.getId());
 
 
                 if (editId.isPresent()) {
+                    // для редактируемого сообщениях сохраняем атрибуты дерева
                     Optional<Message> byId = messageService.findById(message.getId());
                     if (byId.isPresent()) {
                         message.setLvl(byId.get().getLvl());
@@ -208,6 +212,7 @@ public class WelcomeController {
                     messageService.save(message);
                     return "redirect:" + url;
                 } else {
+                    // для нового сообщениях - обновляем дерево
                     message.setDate(new Date());
                     messageService.saveReply(message, thread);
                     model.addAttribute("messageForm", new Message());
