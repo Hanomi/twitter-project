@@ -9,8 +9,8 @@
 	<packaging>war</packaging>
 
 	<name>twitter-project</name>
-	<url>http://www.example.com</url>
-	<description>Twitter like project for Spring Boot</description>
+	<url>http://www.invictus.ru</url>
+	<description>Twitter like project for Spring</description>
 
 	<properties>
 		<spring.version>5.0.7.RELEASE</spring.version>
@@ -116,16 +116,6 @@
 					<source>8</source>
 					<target>8</target>
 					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.tomcat.maven</groupId>
-				<artifactId>tomcat7-maven-plugin</artifactId>
-				<version>2.2</version>
-				<configuration>
-					<url>http://localhost:8080/manager/text</url>
-					<server>TomcatServer</server>
-					<path>/</path>
 				</configuration>
 			</plugin>
 		</plugins>

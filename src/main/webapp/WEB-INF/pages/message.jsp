@@ -4,8 +4,6 @@
 <%@include file="templates/start.jspf" %>
 <%@include file="templates/header.jspf" %>
 
-<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
-
 <main role="main" class="container">
     <c:if test="${parentMessage != null}">
         <div class="row">
