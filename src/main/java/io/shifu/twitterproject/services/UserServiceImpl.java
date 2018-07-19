@@ -34,6 +34,8 @@ public class UserServiceImpl implements UserService {
     public void save(User user) {
         // не вк юзер
         user.setVkId(0);
+        // без ника
+        user.setNick("");
         // кодируем пароль
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         // присваеваем роль по умолчанию

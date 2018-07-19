@@ -10,7 +10,7 @@
                 <h4>Регистрация</h4>
                 <spring:bind path="email">
                     <div class="form-group">
-                        <form:label path="email">Username:</form:label>
+                        <form:label path="email">Email:</form:label>
                         <form:input type="email" path="email" class="form-control" placeholder="Email"
                                     autofocus="true"/>
                         <form:errors path="email" class="form-text text-danger"/>
