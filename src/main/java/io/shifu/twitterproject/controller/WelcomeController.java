@@ -103,13 +103,19 @@ public class WelcomeController {
         return "index";
     }
 
-    @GetMapping({"/like/{likeId}", "/pages/{pageId}/like/{likeId}",
-            "/user/{userId}/like/{likeId}", "/user/{userId}/pages/{pageId}/like/{likeId}"})
+    @GetMapping({"/like/{likeId}",
+            "/pages/{pageId}/like/{likeId}",
+            "/user/{userId}/like/{likeId}",
+            "/user/{userId}/pages/{pageId}/like/{likeId}",
+            "/message/{messageId}/like/{likeId}",
+            "/message/{messageId}/pages/{pageId}/like/{likeId}"
+    })
     public String like(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user,
                        @PathVariable("likeId") Long likeId,
+                       @PathVariable("messageId") Optional<Long> messageId,
                        @PathVariable("userId") Optional<Long> userId,
                        @PathVariable("pageId") Optional<Integer> pageId) {
-        String url = userId.map(user_id -> "/user/" + user_id).orElse("") + pageId.map(page_id -> "/pages/" + page_id).orElse("");
+        String url = messageId.map(message_Id -> "/message/" + message_Id).orElse("") + userId.map(user_id -> "/user/" + user_id).orElse("") + pageId.map(page_id -> "/pages/" + page_id).orElse("");
         if (user != null && !user.getUsername().equals(messageService.findById(likeId).get().getUser().getEmail())) {
             if (likeService.liked(likeId, user.getUsername())) {
                 likeService.delete(likeId, user.getUsername());
@@ -123,13 +129,19 @@ public class WelcomeController {
         return "redirect:" + (url.isEmpty() ? "/" : url);
     }
 
-    @GetMapping({"/retweet/{retweetId}", "/pages/{pageId}/retweet/{retweetId}",
-            "/user/{userId}/retweet/{retweetId}", "/user/{userId}/pages/{pageId}/retweet/{retweetId}"})
+    @GetMapping({"/retweet/{retweetId}",
+            "/pages/{pageId}/retweet/{retweetId}",
+            "/user/{userId}/retweet/{retweetId}",
+            "/user/{userId}/pages/{pageId}/retweet/{retweetId}",
+            "/message/{messageId}/retweet/{retweetId}",
+            "/message/{messageId}/pages/{pageId}/retweet/{retweetId}"
+    })
     public String retweet(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user,
                           @PathVariable("retweetId") Long retweetId,
+                          @PathVariable("messageId") Optional<Long> messageId,
                           @PathVariable("userId") Optional<Long> userId,
                           @PathVariable("pageId") Optional<Integer> pageId) {
-        String url = userId.map(user_id -> "/user/" + user_id).orElse("") + pageId.map(page_id -> "/pages/" + page_id).orElse("");
+        String url = messageId.map(message_Id -> "/message/" + message_Id).orElse("") + userId.map(user_id -> "/user/" + user_id).orElse("") + pageId.map(page_id -> "/pages/" + page_id).orElse("");
         if (user != null && !user.getUsername().equals(messageService.findById(retweetId).get().getUser().getEmail())) {
             Message message = new Message();
             Message oldMessage = messageService.findById(retweetId).get();
